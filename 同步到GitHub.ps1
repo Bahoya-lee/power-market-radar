@@ -35,13 +35,19 @@ if (-not (Test-Path -LiteralPath (Join-Path $Root ".git"))) {
     Stop-WithError "当前目录不是 Git 仓库，无法同步到 GitHub。"
 }
 
-Write-Step "1/4 抓取并刷新本地数据"
+Write-Step "1/5 检查 GitHub 登录状态"
+& git -c http.sslBackend=openssl -c http.proxy= ls-remote --heads origin | Out-Null
+if ($LASTEXITCODE -ne 0) {
+    Stop-WithError "GitHub 登录或网络检查失败。请先完成登录授权，再重新运行本脚本。"
+}
+
+Write-Step "2/5 抓取并刷新本地数据"
 & python "crawler\run.py"
 if ($LASTEXITCODE -ne 0) {
     Stop-WithError "数据更新失败。请检查网络、代理或 arXiv 提示后重试。"
 }
 
-Write-Step "2/4 暂存变更"
+Write-Step "3/5 暂存变更"
 & git config http.sslBackend openssl
 & git config http.proxy ""
 & git add -A
@@ -53,17 +59,17 @@ if ($LASTEXITCODE -ne 0) {
 $HasChanges = ($LASTEXITCODE -ne 0)
 
 if ($HasChanges) {
-    Write-Step "3/4 提交变更"
+    Write-Step "4/5 提交变更"
     $Message = "Update literature data " + (Get-Date -Format "yyyy-MM-dd HH:mm")
     & git commit -m $Message
     if ($LASTEXITCODE -ne 0) {
         Stop-WithError "Git 提交失败。请检查仓库状态。"
     }
 } else {
-    Write-Step "3/4 没有检测到新的数据变化"
+    Write-Step "4/5 没有检测到新的数据变化"
 }
 
-Write-Step "4/4 推送到 GitHub"
+Write-Step "5/5 推送到 GitHub"
 & git -c http.sslBackend=openssl -c http.proxy= push
 if ($LASTEXITCODE -ne 0) {
     Write-Host ""
@@ -77,4 +83,3 @@ Write-Host "  同步完成。" -ForegroundColor Green
 Write-Host "  仓库：https://github.com/Bahoya-lee/power-market-radar" -ForegroundColor DarkGray
 Write-Host "  网站：https://bahoya-lee.github.io/power-market-radar/" -ForegroundColor DarkGray
 exit 0
-
