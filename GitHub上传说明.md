@@ -112,6 +112,14 @@ git push
 
 GitHub Pages 会自动发布最新数据。
 
+也可以直接双击项目根目录的：
+
+```
+一键更新并同步到GitHub.bat
+```
+
+它会自动执行抓取、提交和推送。第一次运行时需要完成一次 GitHub 登录授权。
+
 ---
 
 ## 六、建议的仓库设置
@@ -131,4 +139,3 @@ data/library.db
 
 网站只需要 `data/data.js` 和 `data/demo.js` 就能正常显示。`library.db`
 只是本机继续增量抓取时使用的历史数据库。
-
