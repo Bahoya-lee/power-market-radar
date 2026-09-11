@@ -1,0 +1,97 @@
+{
+  "updated_at": "2026-09-11 13:40",
+  "updated_date": "2026-09-11",
+  "generated_ts": 1789105232380,
+  "source_count": 1,
+  "errors": [
+    {
+      "topic": "spot_market",
+      "source": "arxiv",
+      "error": "获取失败（重试 3 次）：http://export.arxiv.org/api/query?search_query=%28abs%3A%22electricity%20spot%20market%22%20OR%20abs%3A%22electricity%20market%20clearing%22 —— ('Connection aborted.', ConnectionResetError(10054, '远程主机强迫关闭了一个现有的连接。', None, 10054, None))"
+    },
+    {
+      "topic": "price_forecast",
+      "source": "arxiv",
+      "error": "获取失败（重试 3 次）：http://export.arxiv.org/api/query?search_query=%28abs%3A%22electricity%20price%20forecasting%22%20OR%20abs%3A%22electricity%20price%20predic —— ('Connection aborted.', ConnectionResetError(10054, '远程主机强迫关闭了一个现有的连接。', None, 10054, None))"
+    }
+  ],
+  "error_count": 2,
+  "source_status": [
+    {
+      "id": "openalex",
+      "name": "OpenAlex",
+      "enabled": true,
+      "status": "ok",
+      "fetched": 555,
+      "errors": 0
+    },
+    {
+      "id": "arxiv",
+      "name": "arXiv",
+      "enabled": true,
+      "status": "failed",
+      "fetched": 0,
+      "errors": 2
+    },
+    {
+      "id": "crossref",
+      "name": "Crossref",
+      "enabled": true,
+      "status": "empty",
+      "fetched": 0,
+      "errors": 0
+    },
+    {
+      "id": "semanticscholar",
+      "name": "Semantic Scholar",
+      "enabled": false,
+      "status": "disabled",
+      "fetched": 0,
+      "errors": 0
+    }
+  ],
+  "stats": {
+    "started": "2026-09-11T13:36:31",
+    "finished": "2026-09-11T13:40:32",
+    "elapsed_sec": 240.6,
+    "topics": 18,
+    "source_status": [
+      {
+        "id": "openalex",
+        "name": "OpenAlex",
+        "enabled": true,
+        "status": "ok",
+        "fetched": 555,
+        "errors": 0
+      },
+      {
+        "id": "arxiv",
+        "name": "arXiv",
+        "enabled": true,
+        "status": "failed",
+        "fetched": 0,
+        "errors": 2
+      },
+      {
+        "id": "crossref",
+        "name": "Crossref",
+        "enabled": true,
+        "status": "empty",
+        "fetched": 0,
+        "errors": 0
+      },
+      {
+        "id": "semanticscholar",
+        "name": "Semantic Scholar",
+        "enabled": false,
+        "status": "disabled",
+        "fetched": 0,
+        "errors": 0
+      }
+    ]
+  },
+  "total": 555,
+  "recent30": 128,
+  "new_today": 87,
+  "oa": 372
+}
