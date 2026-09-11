@@ -395,6 +395,7 @@
       (isFav ? "true" : "false") + '" title="加入收藏">★ 收藏</button>');
     actions.push('<button class="act' + (isRead ? " read-on" : "") + '" type="button" data-read aria-pressed="' +
       (isRead ? "true" : "false") + '" title="标记已读">✓ 已读</button>');
+    actions.push('<button class="act primary-action" type="button" data-detail>查看详情</button>');
     actions.push('<button class="act" type="button" data-cite>复制引用</button>');
     actions.push('<button class="act" type="button" data-bib>BibTeX</button>');
     if (url) actions.push('<a class="act link" href="' + esc(url) + '" target="_blank" rel="noopener">原文 ↗</a>');
@@ -406,7 +407,7 @@
         '<div class="paper-idx">' + idx + '</div>' +
         '<div class="paper-body">' +
           '<h3 class="paper-title">' +
-            (url ? '<a href="' + esc(url) + '" target="_blank" rel="noopener">' + esc(p.title) + '</a>' : esc(p.title)) +
+            '<button class="paper-title-link" type="button" data-detail>' + esc(p.title) + '</button>' +
           '</h3>' +
           '<div class="paper-meta">' + meta.join("") + '</div>' +
           badgeHtml(p) +
@@ -453,6 +454,12 @@
 
       card.querySelector("[data-bib]").addEventListener("click", function () {
         copyText(bibtex(paper), "已复制 BibTeX");
+      });
+
+      Array.prototype.forEach.call(card.querySelectorAll("[data-detail]"), function (button) {
+        button.addEventListener("click", function () {
+          openDetail(paper);
+        });
       });
     });
   }
@@ -785,6 +792,76 @@
 
   var lastFocused = null;
 
+  function openDetail(paper) {
+    var url = paper.url || (paper.doi ? "https://doi.org/" + paper.doi : "");
+    var isFav = favSet.has(paper.uid);
+    var isRead = readSet.has(paper.uid);
+    var meta = [];
+    meta.push('<span>' + esc(authorsText(paper)) + '</span>');
+    if (paper.venue) meta.push('<span class="venue">' + esc(paper.venue) + '</span>');
+    meta.push('<span>' + esc(fmtDate(paper.date)) + '</span>');
+    if (paper.citations) meta.push('<span>被引 ' + paper.citations + '</span>');
+
+    var links = [];
+    if (url) links.push('<a class="btn primary" href="' + esc(url) + '" target="_blank" rel="noopener">打开原文 ↗</a>');
+    if (paper.pdf_url) links.push('<a class="btn" href="' + esc(paper.pdf_url) + '" target="_blank" rel="noopener">打开 PDF ↗</a>');
+    if (paper.doi) links.push('<button class="btn" type="button" data-detail-copy-doi>复制 DOI</button>');
+    links.push('<button class="btn" type="button" data-detail-cite>复制引用</button>');
+    links.push('<button class="btn" type="button" data-detail-bib>复制 BibTeX</button>');
+    links.push('<button class="btn' + (isFav ? " primary" : "") + '" type="button" data-detail-fav>' +
+      (isFav ? "已收藏" : "收藏") + '</button>');
+    links.push('<button class="btn' + (isRead ? " primary" : "") + '" type="button" data-detail-read>' +
+      (isRead ? "已读" : "标记已读") + '</button>');
+
+    $("detailContent").innerHTML =
+      '<h4 class="detail-paper-title">' + esc(paper.title || "未命名文献") + '</h4>' +
+      '<div class="paper-meta detail-meta">' + meta.join("") + '</div>' +
+      badgeHtml(paper) +
+      '<div class="detail-abstract">' + esc(paper.abstract || "这篇文献暂时没有摘要，可以尝试打开原文查看详细信息。") + '</div>' +
+      (paper.doi ? '<div class="detail-doi">DOI：' + esc(paper.doi) + '</div>' : "") +
+      '<div class="detail-actions">' + links.join("") + '</div>' +
+      '<p class="detail-hint">电脑上如果无法打开原文，通常是本机浏览器代理或 DOI 网络访问问题。站内详情、摘要和 DOI 仍可正常查看。</p>';
+
+    var favButton = $("detailContent").querySelector("[data-detail-fav]");
+    if (favButton) {
+      favButton.addEventListener("click", function () {
+        if (favSet.has(paper.uid)) { favSet.delete(paper.uid); toast("已取消收藏"); }
+        else { favSet.add(paper.uid); toast("已加入收藏"); }
+        saveSet(LS.fav, favSet);
+        renderList();
+        openDetail(paper);
+      });
+    }
+    var readButton = $("detailContent").querySelector("[data-detail-read]");
+    if (readButton) {
+      readButton.addEventListener("click", function () {
+        if (readSet.has(paper.uid)) { readSet.delete(paper.uid); toast("已标记为未读"); }
+        else { readSet.add(paper.uid); toast("已标记为已读"); }
+        saveSet(LS.read, readSet);
+        renderList();
+        openDetail(paper);
+      });
+    }
+    var citeButton = $("detailContent").querySelector("[data-detail-cite]");
+    if (citeButton) citeButton.addEventListener("click", function () { copyText(apaText(paper), "已复制参考文献"); });
+    var bibButton = $("detailContent").querySelector("[data-detail-bib]");
+    if (bibButton) bibButton.addEventListener("click", function () { copyText(bibtex(paper), "已复制 BibTeX"); });
+    var doiButton = $("detailContent").querySelector("[data-detail-copy-doi]");
+    if (doiButton) doiButton.addEventListener("click", function () { copyText(paper.doi || "", "已复制 DOI"); });
+
+    lastFocused = document.activeElement;
+    $("detailModal").hidden = false;
+    document.body.style.overflow = "hidden";
+    setTimeout(function () { $("closeDetail").focus(); }, 0);
+  }
+
+  function closeDetailModal() {
+    if ($("detailModal").hidden) return;
+    $("detailModal").hidden = true;
+    document.body.style.overflow = "";
+    if (lastFocused && lastFocused.focus) lastFocused.focus();
+  }
+
   function openExport() {
     refreshExport();
     lastFocused = document.activeElement;
@@ -905,6 +982,10 @@
     $("exportModal").addEventListener("click", function (e) {
       if (e.target === $("exportModal")) closeExportModal();
     });
+    $("closeDetail").addEventListener("click", closeDetailModal);
+    $("detailModal").addEventListener("click", function (e) {
+      if (e.target === $("detailModal")) closeDetailModal();
+    });
     Array.prototype.forEach.call(document.querySelectorAll("#exportModal [data-fmt]"), function (b) {
       b.addEventListener("click", function () {
         state.exportFmt = b.getAttribute("data-fmt");
@@ -922,13 +1003,17 @@
     });
 
     document.addEventListener("keydown", function (e) {
-      var modalOpen = !$("exportModal").hidden;
+      var detailOpen = !$("detailModal").hidden;
+      var exportOpen = !$("exportModal").hidden;
+      var modalOpen = detailOpen || exportOpen;
+      var openModal = detailOpen ? $("detailModal") : $("exportModal");
       if (e.key === "Escape" && modalOpen) {
-        closeExportModal();
+        if (detailOpen) closeDetailModal();
+        else closeExportModal();
         return;
       }
       if (e.key === "Tab" && modalOpen) {
-        var focusable = $("exportModal").querySelectorAll(
+        var focusable = openModal.querySelectorAll(
           'button:not([disabled]), [href], textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
         );
         if (!focusable.length) return;

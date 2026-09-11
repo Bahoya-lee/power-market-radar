@@ -979,12 +979,36 @@ textarea:focus-visible,
   text-decoration: none;
 }
 
+.act.primary-action {
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 38%, transparent);
+  background: color-mix(in srgb, var(--accent) 9%, var(--card-2));
+  font-weight: 600;
+}
+
+.paper-title-link {
+  display: inline;
+  padding: 0;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  letter-spacing: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: color .16s var(--ease);
+}
+
+.paper-title-link:hover { color: var(--accent); }
+
 @media (hover: hover) {
   .paper:hover {
     border-color: color-mix(in srgb, var(--accent) 22%, var(--line-soft));
     background: color-mix(in srgb, var(--accent) 2.5%, var(--card));
   }
   .paper-title a:hover { color: var(--accent); }
+  .paper-title-link:hover { color: var(--accent); }
   .act:hover {
     color: var(--accent);
     border-color: color-mix(in srgb, var(--accent) 42%, transparent);
@@ -1344,6 +1368,70 @@ textarea:focus-visible,
   justify-content: space-between;
   gap: 12px;
   flex-wrap: wrap;
+}
+
+.detail-box {
+  width: min(680px, 100%);
+  max-height: min(86vh, 820px);
+}
+
+.detail-content {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  padding-right: 2px;
+}
+
+.detail-paper-title {
+  margin: 2px 0 10px;
+  color: var(--text);
+  font-size: 17px;
+  font-weight: 680;
+  line-height: 1.45;
+  letter-spacing: -.02em;
+}
+
+.detail-meta {
+  margin-bottom: 9px;
+  font-size: 12.5px;
+}
+
+.detail-abstract {
+  margin: 10px 0 12px;
+  padding: 12px 13px;
+  border: 1px solid var(--line-soft);
+  border-radius: 12px;
+  color: var(--text-2);
+  background: var(--card-2);
+  font-size: 13.5px;
+  line-height: 1.72;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.detail-doi {
+  margin-bottom: 12px;
+  color: var(--text-3);
+  font-family: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+  font-size: 12px;
+  word-break: break-all;
+}
+
+.detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.detail-hint {
+  margin: 13px 0 0;
+  padding-top: 11px;
+  border-top: 1px solid var(--line-soft);
+  color: var(--text-3);
+  font-size: 12px;
+  line-height: 1.6;
 }
 
 @keyframes modal-in {
