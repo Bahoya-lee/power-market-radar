@@ -1,4 +1,4 @@
-$ErrorActionPreference = "Stop"
+﻿$ErrorActionPreference = "Stop"
 
 try {
     [Console]::OutputEncoding = New-Object System.Text.UTF8Encoding($false)

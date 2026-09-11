@@ -1,7 +1,7 @@
 @echo off
-chcp 65001 >nul
+chcp 936 >nul
 cd /d "%~dp0"
-title 鍙栨秷姣忔棩鑷姩鏇存柊
+title 取消每日自动更新
 
 python "crawler\schedule.py" remove
 echo.

@@ -1,14 +1,14 @@
 @echo off
-chcp 65001 >nul
+chcp 936 >nul
 cd /d "%~dp0"
-title ç”µåŠ›å¸‚åœºç ”ç©¶å‰æ²¿è¿½è¸ª - æ•°æ®æ›´æ–°
+title µçÁ¦ÊÐ³¡ÑÐ¾¿Ç°ÑØ×·×Ù - Êý¾Ý¸üÐÂ
 
 where python >nul 2>nul
 if errorlevel 1 (
   echo.
-  echo   [é”™è¯¯] æ²¡æœ‰æ£€æµ‹åˆ° Pythonã€‚
-  echo   è¯·å…ˆå®‰è£… Python 3.9 æˆ–æ›´é«˜ç‰ˆæœ¬ï¼šhttps://www.python.org/downloads/
-  echo   å®‰è£…æ—¶è®°å¾—å‹¾é€‰ "Add Python to PATH"ã€‚
+  echo   [´íÎó] Ã»ÓÐ¼ì²âµ½ Python¡£
+  echo   ÇëÏÈ°²×° Python 3.9 »ò¸ü¸ß°æ±¾£ºhttps://www.python.org/downloads/
+  echo   °²×°Ê±¼ÇµÃ¹´Ñ¡ "Add Python to PATH"¡£
   echo.
   pause
   exit /b 1
@@ -17,15 +17,15 @@ if errorlevel 1 (
 python "crawler\run.py" %*
 if errorlevel 1 (
   echo.
-  echo   [å¤±è´¥] æ›´æ–°æ²¡æœ‰å®Œæˆï¼Œè¯·æŸ¥çœ‹ä¸Šé¢çš„é”™è¯¯æç¤ºã€‚
-  echo   å¸¸è§åŽŸå› ï¼šç½‘ç»œä¸é€šã€å…¬å¸/æ ¡å›­ç½‘éœ€è¦ä»£ç†ã€æ•°æ®æºä¸´æ—¶é™æµã€‚
-  echo   å¦‚æžœæ˜¯ç½‘ç»œé—®é¢˜ï¼Œå¯ä»¥å…ˆåŒå‡»ã€Œæ‰“å¼€ç½‘ç«™.batã€æŸ¥çœ‹ä¸Šä¸€æ¬¡æŠ“åˆ°çš„æ•°æ®ã€‚
+  echo   [Ê§°Ü] ¸üÐÂÃ»ÓÐÍê³É£¬Çë²é¿´ÉÏÃæµÄ´íÎóÌáÊ¾¡£
+  echo   ³£¼ûÔ­Òò£ºÍøÂç²»Í¨¡¢¹«Ë¾/Ð£Ô°ÍøÐèÒª´úÀí¡¢Êý¾ÝÔ´ÁÙÊ±ÏÞÁ÷¡£
+  echo   Èç¹ûÊÇÍøÂçÎÊÌâ£¬¿ÉÒÔÏÈË«»÷¡¸´ò¿ªÍøÕ¾.bat¡¹²é¿´ÉÏÒ»´Î×¥µ½µÄÊý¾Ý¡£
   echo.
   pause
   exit /b 1
 )
 
-echo   æ­£åœ¨æ‰“å¼€ç½‘ç«™â€¦
+echo   ÕýÔÚ´ò¿ªÍøÕ¾¡­
 start "" "index.html"
 timeout /t 3 >nul
 exit /b 0

@@ -1,10 +1,21 @@
 {
-  "updated_at": "2026-09-11 09:09",
+  "updated_at": "2026-09-11 23:06",
   "updated_date": "2026-09-11",
-  "generated_ts": 1789117760653,
-  "source_count": 2,
-  "errors": [],
-  "error_count": 0,
+  "generated_ts": 1789139181807,
+  "source_count": 1,
+  "errors": [
+    {
+      "topic": "spot_market",
+      "source": "arxiv",
+      "error": "获取失败（重试 3 次）：http://export.arxiv.org/api/query?search_query=%28abs%3A%22electricity%20spot%20market%22%20OR%20abs%3A%22electricity%20market%20clearing%22 —— ('Connection aborted.', ConnectionResetError(10054, '远程主机强迫关闭了一个现有的连接。', None, 10054, None))"
+    },
+    {
+      "topic": "price_forecast",
+      "source": "arxiv",
+      "error": "获取失败（重试 3 次）：http://export.arxiv.org/api/query?search_query=%28abs%3A%22electricity%20price%20forecasting%22%20OR%20abs%3A%22electricity%20price%20predic —— ('Connection aborted.', ConnectionResetError(10054, '远程主机强迫关闭了一个现有的连接。', None, 10054, None))"
+    }
+  ],
+  "error_count": 2,
   "source_status": [
     {
       "id": "openalex",
@@ -18,9 +29,9 @@
       "id": "arxiv",
       "name": "arXiv",
       "enabled": true,
-      "status": "ok",
-      "fetched": 183,
-      "errors": 0
+      "status": "failed",
+      "fetched": 0,
+      "errors": 2
     },
     {
       "id": "crossref",
@@ -40,9 +51,9 @@
     }
   ],
   "stats": {
-    "started": "2026-09-11T09:07:06",
-    "finished": "2026-09-11T09:09:20",
-    "elapsed_sec": 133.7,
+    "started": "2026-09-11T22:59:29",
+    "finished": "2026-09-11T23:06:21",
+    "elapsed_sec": 411.8,
     "topics": 18,
     "source_status": [
       {
@@ -57,9 +68,9 @@
         "id": "arxiv",
         "name": "arXiv",
         "enabled": true,
-        "status": "ok",
-        "fetched": 183,
-        "errors": 0
+        "status": "failed",
+        "fetched": 0,
+        "errors": 2
       },
       {
         "id": "crossref",
@@ -79,8 +90,8 @@
       }
     ]
   },
-  "total": 706,
-  "recent30": 130,
-  "new_today": 706,
-  "oa": 523
+  "total": 561,
+  "recent30": 133,
+  "new_today": 3,
+  "oa": 378
 }
