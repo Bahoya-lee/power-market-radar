@@ -35,10 +35,14 @@ if (-not (Test-Path -LiteralPath (Join-Path $Root ".git"))) {
     Stop-WithError "当前目录不是 Git 仓库，无法同步到 GitHub。"
 }
 
-Write-Step "1/5 检查 GitHub 登录状态"
+Write-Step "1/5 检查 GitHub 登录并同步远程数据"
 & git -c http.sslBackend=openssl -c http.proxy= ls-remote --heads origin | Out-Null
 if ($LASTEXITCODE -ne 0) {
     Stop-WithError "GitHub 登录或网络检查失败。请先完成登录授权，再重新运行本脚本。"
+}
+& git -c http.sslBackend=openssl -c http.proxy= pull --rebase --autostash origin main
+if ($LASTEXITCODE -ne 0) {
+    Stop-WithError "同步远程仓库失败，请处理 Git 冲突后重试。"
 }
 
 Write-Step "2/5 抓取并刷新本地数据"

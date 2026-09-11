@@ -86,6 +86,10 @@ https://你的用户名.github.io/power-market-radar/
 以后每次把更新后的 `data/data.js` 和 `data/demo.js` 推送到 `main`，
 网站都会自动重新部署。
 
+当前 `Refresh data and deploy website` 工作流还会每天在 GitHub 云端运行一次
+Python 爬虫。SQLite 历史库通过 Actions Cache 保存，不会作为二进制文件提交到
+仓库；网站数据文件会自动提交并触发 Pages 部署。
+
 ---
 
 ## 五、更新数据后怎么同步

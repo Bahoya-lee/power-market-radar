@@ -1,28 +1,80 @@
-name: Deploy website to GitHub Pages
+name: Refresh data and deploy website
 
 on:
   push:
     branches: [main]
+  schedule:
+    # 00:30 UTC = 08:30 Asia/Shanghai
+    - cron: "30 0 * * *"
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: pages
-  cancel-in-progress: true
+  group: pages-and-data
+  cancel-in-progress: false
 
 jobs:
-  deploy:
+  refresh:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Restore literature database
+        uses: actions/cache@v4
+        with:
+          path: data/library.db
+          key: pmr-library-${{ github.run_id }}
+          restore-keys: |
+            pmr-library-
+
+      - name: Crawl and build latest data
+        env:
+          PYTHONIOENCODING: utf-8
+        run: python crawler/run.py --quiet
+
+      - name: Commit updated website data
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/data.js data/demo.js data/papers.json data/insights.json data/meta.json
+          if git diff --cached --quiet; then
+            echo "No website data changes"
+          else
+            git commit -m "Update literature data $(date -u +'%Y-%m-%d %H:%M UTC')"
+            git push
+          fi
+
+  deploy:
+    needs: refresh
+    if: always()
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Check out repository
+      - name: Check out latest main
         uses: actions/checkout@v4
+        with:
+          ref: main
 
       - name: Prepare static site
         shell: bash
@@ -44,4 +96,3 @@ jobs:
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
-
