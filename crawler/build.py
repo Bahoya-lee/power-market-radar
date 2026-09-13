@@ -15,7 +15,7 @@ import random
 from datetime import date, datetime, timedelta
 from pathlib import Path
 
-from . import analyze, config
+from . import analyze, config, translate
 
 
 def _dumps(obj) -> str:
@@ -48,6 +48,8 @@ def build_site(
             p["abstract"] = p["abstract"][: config.ABSTRACT_KEEP] + "…"
         p["is_new"] = p.get("uid") in new_uids
         p["first_seen"] = p.get("first_seen") or ""
+
+    translate.apply_pre_translations(papers, root)
 
     trends = analyze.topic_trends(papers)
     hot = analyze.hotspots(papers, trends)
@@ -180,6 +182,11 @@ def _write_demo(root: Path, real_papers: list[dict], payload: dict) -> None:
 
     # 演示数据的热点/趋势必须基于演示文献本身重算，
     # 否则界面里的排行和趋势图会全是 0。
+    for p in demo:
+        p["title_zh"] = p["title"]
+        p["abstract_zh"] = p["abstract"]
+        p["venue_zh"] = translate.VENUE_ZH.get((p.get("venue") or "").lower(), "")
+
     demo = analyze.enrich(demo)
     demo_trends = analyze.topic_trends(demo)
     insights = {

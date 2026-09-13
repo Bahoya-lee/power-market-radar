@@ -1,0 +1,2271 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#f5f5f7">
+  <title>电力市场前沿追踪 · 界面方案 Demo</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f5f5f7;
+      --bg-ice: #f4f8fb;
+      --surface: #ffffff;
+      --surface-2: #f5f5f7;
+      --surface-3: #e8e8ed;
+      --carbon: #1d1d1f;
+      --smoke: #333333;
+      --graphite: #474747;
+      --ash: #707070;
+      --mist: #858585;
+      --pebble: #e2e2e5;
+      --hairline: #d2d2d7;
+      --blue: #0071e3;
+      --blue-outline: #0066cc;
+      --blue-signal: #2997ff;
+      --green: #248a3d;
+      --orange: #b25000;
+      --red: #d70015;
+      --radius-pill: 980px;
+      --radius-card: 8px;
+      --radius-input: 8px;
+      --shadow-xl: 0 22px 60px rgba(0, 0, 0, .22);
+      --ease: cubic-bezier(.22, .8, .28, 1);
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--carbon);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+        "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      font-size: 17px;
+      line-height: 1.5;
+      letter-spacing: -.016em;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    a {
+      color: var(--blue-outline);
+      text-decoration: none;
+    }
+
+    a:hover { text-decoration: underline; }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+      color: inherit;
+    }
+
+    button,
+    a,
+    input,
+    select,
+    textarea {
+      outline: none;
+    }
+
+    button:focus-visible,
+    a:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    textarea:focus-visible,
+    [tabindex]:focus-visible {
+      box-shadow: 0 0 0 3px rgba(0, 113, 227, .20);
+    }
+
+    [hidden] { display: none !important; }
+
+    ::selection {
+      color: #fff;
+      background: rgba(0, 113, 227, .82);
+    }
+
+    .muted {
+      color: var(--ash);
+      font-size: 13px;
+    }
+
+    /* 顶栏：苹果式全局导航，细线分隔，不堆阴影 */
+    .global-nav {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      padding-top: env(safe-area-inset-top);
+      background: rgba(255, 255, 255, .88);
+      border-bottom: 1px solid var(--hairline);
+      -webkit-backdrop-filter: saturate(180%) blur(22px);
+      backdrop-filter: saturate(180%) blur(22px);
+    }
+
+    .nav-inner {
+      width: min(1120px, 100%);
+      min-height: 52px;
+      margin: 0 auto;
+      padding: 8px 24px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--carbon);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: -.01em;
+      text-decoration: none;
+    }
+
+    .brand:hover { text-decoration: none; }
+
+    .brand-mark {
+      width: 28px;
+      height: 28px;
+      flex: none;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      color: #fff;
+      background: var(--blue);
+    }
+
+    .brand-mark svg {
+      width: 17px;
+      height: 17px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      margin-left: 4px;
+    }
+
+    .nav-links a {
+      color: var(--graphite);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: -.01em;
+    }
+
+    .nav-links a.active {
+      color: var(--carbon);
+      font-weight: 600;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+    }
+
+    .update-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 32px;
+      padding: 0 12px;
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-pill);
+      color: var(--ash);
+      background: var(--surface);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .update-label::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    .pill-btn {
+      min-height: 32px;
+      padding: 7px 15px;
+      border: 0;
+      border-radius: var(--radius-pill);
+      color: var(--carbon);
+      background: var(--surface-3);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition:
+        transform .16s var(--ease),
+        background-color .16s var(--ease),
+        color .16s var(--ease);
+    }
+
+    .pill-btn:hover { background: var(--pebble); }
+    .pill-btn:active { transform: scale(.97); }
+
+    .pill-btn.primary {
+      color: #fff;
+      background: var(--blue);
+    }
+
+    .pill-btn.primary:hover { background: #0067c9; }
+
+    .outline-btn {
+      min-height: 32px;
+      padding: 6px 14px;
+      border: 1px solid var(--blue-outline);
+      border-radius: var(--radius-pill);
+      color: var(--blue-outline);
+      background: transparent;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition:
+        transform .16s var(--ease),
+        background-color .16s var(--ease);
+    }
+
+    .outline-btn:hover { background: rgba(0, 102, 204, .06); }
+    .outline-btn:active { transform: scale(.97); }
+
+    /* 苹果式 Hero：整页留白、大标题、搜索优先 */
+    .hero {
+      width: min(980px, 100%);
+      margin: 0 auto;
+      padding: 76px 24px 40px;
+      text-align: center;
+    }
+
+    .demo-note {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 24px;
+      padding: 6px 12px;
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-pill);
+      color: var(--ash);
+      background: rgba(255, 255, 255, .66);
+      font-size: 12px;
+      letter-spacing: 0;
+    }
+
+    .demo-note::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--blue-signal);
+    }
+
+    .hero-kicker {
+      margin: 0 0 14px;
+      color: var(--ash);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      margin: 0;
+      color: var(--carbon);
+      font-size: clamp(40px, 7vw, 64px);
+      font-weight: 600;
+      line-height: 1.07;
+      letter-spacing: -.035em;
+    }
+
+    .hero-sub {
+      max-width: 680px;
+      margin: 20px auto 0;
+      color: var(--graphite);
+      font-size: clamp(17px, 2.5vw, 22px);
+      font-weight: 400;
+      line-height: 1.45;
+      letter-spacing: -.012em;
+    }
+
+    .search-shell {
+      position: relative;
+      width: min(760px, 100%);
+      margin: 34px auto 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      height: 60px;
+      padding: 0 16px 0 20px;
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-pill);
+      background: var(--surface);
+      text-align: left;
+      transition:
+        border-color .18s var(--ease),
+        box-shadow .18s var(--ease);
+    }
+
+    .search-shell:focus-within {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 4px rgba(0, 113, 227, .12);
+    }
+
+    .search-shell svg {
+      width: 21px;
+      height: 21px;
+      flex: none;
+      color: var(--ash);
+    }
+
+    .search-shell input {
+      min-width: 0;
+      flex: 1;
+      height: 100%;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      font-size: 19px;
+      letter-spacing: -.01em;
+    }
+
+    .search-shell input::placeholder { color: var(--ash); }
+
+    .search-shell input::-webkit-search-cancel-button,
+    .search-shell input::-webkit-search-decoration {
+      -webkit-appearance: none;
+    }
+
+    .search-clear {
+      width: 34px;
+      height: 34px;
+      flex: none;
+      display: grid;
+      place-items: center;
+      border: 0;
+      border-radius: 50%;
+      color: var(--ash);
+      background: var(--surface-3);
+      cursor: pointer;
+      font-size: 14px;
+      transition: transform .16s var(--ease), background-color .16s var(--ease);
+    }
+
+    .search-clear:hover { background: var(--pebble); }
+    .search-clear:active { transform: scale(.94); }
+
+    .quick-topics {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .topic-pill {
+      min-height: 34px;
+      padding: 7px 14px;
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-pill);
+      color: var(--graphite);
+      background: var(--surface);
+      font-size: 13px;
+      font-weight: 500;
+      white-space: nowrap;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition:
+        transform .16s var(--ease),
+        background-color .16s var(--ease),
+        border-color .16s var(--ease),
+        color .16s var(--ease);
+    }
+
+    .topic-pill:hover {
+      border-color: var(--mist);
+      color: var(--carbon);
+    }
+
+    .topic-pill:active { transform: scale(.96); }
+
+    .topic-pill.active {
+      color: #fff;
+      border-color: var(--blue);
+      background: var(--blue);
+    }
+
+    /* 指标：不用卡片，用大字号和细线制造苹果式节奏 */
+    .metrics {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+      padding: 28px 24px 38px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      border-top: 1px solid var(--hairline);
+      border-bottom: 1px solid var(--hairline);
+    }
+
+    .metric {
+      padding: 0 34px;
+      text-align: center;
+    }
+
+    .metric + .metric { border-left: 1px solid var(--hairline); }
+
+    .metric-value {
+      color: var(--carbon);
+      font-size: 38px;
+      font-weight: 600;
+      line-height: 1.1;
+      letter-spacing: -.04em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .metric-value small {
+      margin-left: 5px;
+      color: var(--ash);
+      font-size: 15px;
+      font-weight: 400;
+      letter-spacing: 0;
+    }
+
+    .metric-label {
+      margin-top: 8px;
+      color: var(--ash);
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0;
+    }
+
+    /* 内容流：Google 式结果列表 */
+    .content-shell {
+      width: min(980px, 100%);
+      margin: 0 auto;
+      padding: 30px 24px 56px;
+    }
+
+    .tabs {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      border-bottom: 1px solid var(--hairline);
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .tabs::-webkit-scrollbar { display: none; }
+
+    .tab {
+      position: relative;
+      min-height: 42px;
+      padding: 10px 2px;
+      border: 0;
+      color: var(--ash);
+      background: transparent;
+      font-size: 14px;
+      font-weight: 500;
+      white-space: nowrap;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: color .16s var(--ease);
+    }
+
+    .tab:hover { color: var(--carbon); }
+
+    .tab.active {
+      color: var(--blue-outline);
+      font-weight: 600;
+    }
+
+    .tab.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      height: 2px;
+      border-radius: 2px 2px 0 0;
+      background: var(--blue);
+    }
+
+    .result-toolbar {
+      min-height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .result-count {
+      color: var(--graphite);
+      font-size: 14px;
+      letter-spacing: -.01em;
+    }
+
+    .result-count strong {
+      color: var(--carbon);
+      font-weight: 600;
+    }
+
+    .sort-select {
+      height: 36px;
+      padding: 0 32px 0 12px;
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-input);
+      color: var(--carbon);
+      background: var(--surface);
+      background-image:
+        linear-gradient(45deg, transparent 50%, var(--ash) 50%),
+        linear-gradient(135deg, var(--ash) 50%, transparent 50%);
+      background-position:
+        calc(100% - 15px) 15px,
+        calc(100% - 11px) 15px;
+      background-repeat: no-repeat;
+      background-size: 4px 4px, 4px 4px;
+      appearance: none;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .results {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .result {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 92px;
+      gap: 18px;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--hairline);
+      animation: result-in .28s var(--ease) both;
+    }
+
+    .result:last-child { border-bottom: 0; }
+
+    @keyframes result-in {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-title {
+      display: block;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      color: var(--carbon);
+      background: transparent;
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 1.3;
+      letter-spacing: -.018em;
+      text-align: left;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: color .16s var(--ease);
+    }
+
+    .result-title:hover { color: var(--blue-outline); }
+
+    .result-source {
+      margin-top: 5px;
+      color: var(--green);
+      font-size: 13px;
+      line-height: 1.35;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .result-abstract {
+      display: -webkit-box;
+      margin: 8px 0 0;
+      overflow: hidden;
+      color: var(--graphite);
+      font-size: 14px;
+      line-height: 1.55;
+      letter-spacing: -.01em;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+    }
+
+    .result-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      min-height: 22px;
+      padding: 2px 8px;
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-pill);
+      color: var(--graphite);
+      background: var(--surface);
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .tag::before {
+      content: "";
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--blue-signal);
+    }
+
+    .tag.new::before { background: var(--green); }
+    .tag.top::before { background: var(--orange); }
+    .tag.oa::before { background: var(--blue-signal); }
+
+    .result-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .text-action {
+      padding: 4px 0;
+      border: 0;
+      color: var(--blue-outline);
+      background: transparent;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .text-action:hover { text-decoration: underline; }
+
+    .text-action.on { color: var(--carbon); font-weight: 600; }
+    .text-action.read-on { color: var(--green); font-weight: 600; }
+
+    .result-side {
+      padding-top: 2px;
+      text-align: right;
+    }
+
+    .cite-count {
+      color: var(--carbon);
+      font-size: 18px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .cite-label {
+      margin-top: 2px;
+      color: var(--ash);
+      font-size: 11px;
+    }
+
+    .load-more {
+      width: 100%;
+      min-height: 44px;
+      margin-top: 22px;
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-pill);
+      color: var(--graphite);
+      background: var(--surface);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition:
+        transform .16s var(--ease),
+        border-color .16s var(--ease),
+        background-color .16s var(--ease);
+    }
+
+    .load-more:hover {
+      border-color: var(--mist);
+      background: var(--surface-2);
+    }
+
+    .load-more:active { transform: scale(.99); }
+
+    /* 洞察区：整段浅色画布，不用侧边卡片 */
+    .insights {
+      background: var(--surface-2);
+      border-top: 1px solid var(--hairline);
+      border-bottom: 1px solid var(--hairline);
+    }
+
+    .insights-inner {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+      padding: 54px 24px 60px;
+    }
+
+    .section-heading {
+      margin-bottom: 30px;
+    }
+
+    .section-kicker {
+      margin: 0 0 8px;
+      color: var(--ash);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .10em;
+      text-transform: uppercase;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      color: var(--carbon);
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: -.03em;
+      line-height: 1.15;
+    }
+
+    .section-heading p {
+      max-width: 620px;
+      margin: 12px 0 0;
+      color: var(--graphite);
+      font-size: 15px;
+      line-height: 1.55;
+    }
+
+    .insights-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr .9fr;
+      gap: 44px;
+    }
+
+    .insight h3 {
+      margin: 0 0 14px;
+      color: var(--carbon);
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .insight-note {
+      margin: 8px 0 0;
+      color: var(--ash);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .topic-line {
+      display: grid;
+      grid-template-columns: 120px 1fr 40px;
+      align-items: center;
+      gap: 12px;
+      min-height: 34px;
+    }
+
+    .topic-name {
+      color: var(--graphite);
+      font-size: 13px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .topic-bar {
+      height: 6px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: var(--pebble);
+    }
+
+    .topic-bar i {
+      display: block;
+      height: 100%;
+      border-radius: 999px;
+      background: var(--blue);
+    }
+
+    .topic-score {
+      color: var(--ash);
+      font-size: 12px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .keyword-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 12px;
+      line-height: 1.35;
+    }
+
+    .keyword-cloud span {
+      color: var(--graphite);
+      font-size: 13px;
+    }
+
+    .keyword-cloud span.fresh {
+      color: var(--carbon);
+      font-weight: 600;
+    }
+
+    .source-line {
+      display: grid;
+      grid-template-columns: 100px 1fr 38px;
+      align-items: center;
+      gap: 10px;
+      min-height: 30px;
+    }
+
+    .source-name {
+      color: var(--graphite);
+      font-size: 12px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .source-bar {
+      height: 5px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: var(--pebble);
+    }
+
+    .source-bar i {
+      display: block;
+      height: 100%;
+      border-radius: 999px;
+      background: var(--blue-signal);
+    }
+
+    .source-num {
+      color: var(--ash);
+      font-size: 12px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    footer {
+      padding: 28px 24px 52px;
+      color: var(--ash);
+      font-size: 12px;
+      line-height: 1.7;
+      text-align: center;
+    }
+
+    footer p { margin: 4px 0; }
+
+    /* 详情弹层 */
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: rgba(0, 0, 0, .34);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      animation: fade-in .2s var(--ease);
+    }
+
+    .modal[hidden] { display: none; }
+
+    .sheet {
+      width: min(680px, 100%);
+      max-height: min(84vh, 760px);
+      padding: 24px 25px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, .96);
+      box-shadow: var(--shadow-xl);
+      -webkit-backdrop-filter: saturate(180%) blur(28px);
+      backdrop-filter: saturate(180%) blur(28px);
+      animation: sheet-in .28s var(--ease);
+    }
+
+    .sheet-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .sheet-title {
+      margin: 0;
+      color: var(--carbon);
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 1.4;
+      letter-spacing: -.018em;
+    }
+
+    .close-btn {
+      width: 32px;
+      height: 32px;
+      flex: none;
+      display: grid;
+      place-items: center;
+      border: 0;
+      border-radius: 50%;
+      color: var(--graphite);
+      background: var(--surface-3);
+      cursor: pointer;
+      transition: transform .16s var(--ease), background-color .16s var(--ease);
+    }
+
+    .close-btn:hover { background: var(--pebble); }
+    .close-btn:active { transform: scale(.92); }
+
+    .sheet-meta {
+      color: var(--ash);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .sheet-abstract {
+      margin: 0;
+      padding: 14px 15px;
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-card);
+      color: var(--graphite);
+      background: var(--surface-2);
+      font-size: 14px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+    }
+
+    .sheet-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding-top: 4px;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: calc(26px + env(safe-area-inset-bottom));
+      z-index: 130;
+      max-width: min(86vw, 480px);
+      padding: 11px 18px;
+      transform: translateX(-50%);
+      border-radius: var(--radius-pill);
+      color: #fff;
+      background: rgba(32, 32, 36, .92);
+      font-size: 13px;
+      font-weight: 500;
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      backdrop-filter: saturate(180%) blur(20px);
+      animation: toast-in .24s var(--ease);
+    }
+
+    @keyframes fade-in {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes sheet-in {
+      from { opacity: 0; transform: translateY(14px) scale(.985); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes toast-in {
+      from { opacity: 0; transform: translate(-50%, 8px) scale(.96); }
+      to { opacity: 1; transform: translate(-50%, 0) scale(1); }
+    }
+
+    @media (max-width: 860px) {
+      .nav-links { display: none; }
+      .update-label { max-width: 148px; overflow: hidden; text-overflow: ellipsis; }
+
+      .hero { padding-top: 52px; }
+      .hero h1 { font-size: 42px; }
+
+      .metrics { gap: 0; }
+      .metric { padding: 0 18px; }
+      .metric-value { font-size: 30px; }
+
+      .insights-grid {
+        grid-template-columns: 1fr;
+        gap: 36px;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .nav-inner { padding-inline: 14px; gap: 8px; }
+      .hero { padding: 44px 16px 30px; }
+      .hero h1 { font-size: 38px; }
+      .hero-sub { font-size: 16px; }
+      .search-shell { height: 52px; }
+      .search-shell input { font-size: 16px; }
+
+      .metrics {
+        display: flex;
+        margin-right: -16px;
+        padding-right: 16px;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+
+      .metrics::-webkit-scrollbar { display: none; }
+
+      .metric {
+        min-width: 150px;
+        padding: 0 22px;
+      }
+
+      .metric + .metric { border-left: 0; }
+      .metric:not(:last-child) { border-right: 1px solid var(--hairline); }
+
+      .content-shell { padding: 22px 16px 44px; }
+
+      .result {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        padding: 20px 0;
+      }
+
+      .result-side {
+        display: flex;
+        align-items: baseline;
+        gap: 5px;
+        text-align: left;
+      }
+
+      .insights-inner { padding: 40px 16px 46px; }
+
+      .topic-line { grid-template-columns: 96px 1fr 34px; }
+      .source-line { grid-template-columns: 78px 1fr 30px; }
+
+      .sheet { padding: 20px 16px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *,
+      *::before,
+      *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+  <style id="v2-style">
+    :root {
+      --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+        "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      --font-display: "SF Pro Display", "Aptos Display", "Segoe UI Variable Display",
+        "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      --font-serif: "New York", "Georgia", "Songti SC", "STSong", "SimSun", serif;
+      --font-mono: ui-monospace, "SF Mono", "Cascadia Code", "Consolas", monospace;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      letter-spacing: -.015em;
+    }
+
+    .global-nav { background: rgba(255, 255, 255, .92); }
+    .nav-inner,
+    .hero,
+    .metrics,
+    .content-shell,
+    .insights-inner {
+      width: min(1240px, 100%);
+    }
+
+    /* Hero：从居中改成左右两栏，左边是信息与搜索，右边是重点文献 */
+    .hero {
+      padding: 68px 24px 54px;
+      display: grid;
+      grid-template-columns: 1.04fr .96fr;
+      gap: 72px;
+      align-items: center;
+      text-align: left;
+    }
+
+    .hero-copy { min-width: 0; }
+    .hero-visual { min-width: 0; }
+
+    .demo-note {
+      margin-bottom: 20px;
+      font-family: var(--font-serif);
+      font-style: italic;
+      letter-spacing: .01em;
+    }
+
+    .hero-kicker {
+      margin: 0 0 14px;
+      color: var(--blue-outline);
+      font-family: var(--font-serif);
+      font-size: 14px;
+      font-style: italic;
+      letter-spacing: .02em;
+      text-transform: none;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: clamp(52px, 7vw, 86px);
+      font-weight: 600;
+      line-height: .96;
+      letter-spacing: -.055em;
+    }
+
+    .hero-sub {
+      max-width: 600px;
+      margin: 24px 0 0;
+      color: var(--graphite);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.45;
+      letter-spacing: -.012em;
+    }
+
+    .hero .search-shell {
+      width: 100%;
+      max-width: 680px;
+      margin-top: 34px;
+    }
+
+    .hero .quick-topics {
+      justify-content: flex-start;
+      margin-top: 16px;
+    }
+
+    .hero .quick-topics .topic-pill {
+      background: transparent;
+    }
+
+    .hero .quick-topics .topic-pill.active {
+      color: #fff;
+      border-color: var(--blue);
+      background: var(--blue);
+    }
+
+    .featured-card {
+      min-width: 0;
+      min-height: 430px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--hairline);
+      border-radius: 22px;
+      background: #fff;
+    }
+
+    .featured-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--blue-outline);
+      font-family: var(--font-serif);
+      font-size: 13px;
+      font-style: italic;
+    }
+
+    .featured-label::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--blue-signal);
+    }
+
+    .featured-title {
+      margin-top: 30px;
+      color: var(--carbon);
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 600;
+      line-height: 1.12;
+      letter-spacing: -.042em;
+    }
+
+    .featured-meta {
+      margin-top: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px 14px;
+      color: var(--ash);
+      font-size: 13px;
+    }
+
+    .featured-abstract {
+      margin: 18px 0 0;
+      color: var(--graphite);
+      font-size: 15px;
+      line-height: 1.66;
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 5;
+    }
+
+    .featured-stats {
+      margin-top: auto;
+      padding-top: 22px;
+      display: flex;
+      gap: 34px;
+      border-top: 1px solid var(--hairline);
+    }
+
+    .featured-stat b {
+      display: block;
+      color: var(--carbon);
+      font-family: var(--font-mono);
+      font-size: 25px;
+      font-weight: 600;
+      letter-spacing: -.04em;
+    }
+
+    .featured-stat span {
+      display: block;
+      margin-top: 4px;
+      color: var(--ash);
+      font-size: 12px;
+      letter-spacing: 0;
+    }
+
+    .featured-actions {
+      margin-top: 22px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+    }
+
+    /* 指标：4 个等宽块，用更克制的层级 */
+    .metrics {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      padding: 28px 24px 34px;
+    }
+
+    .metric { padding: 0 32px; }
+
+    .metric-value {
+      font-family: var(--font-display);
+      font-size: 44px;
+      font-weight: 600;
+      letter-spacing: -.05em;
+    }
+
+    .metric-value small {
+      color: var(--ash);
+      font-size: 15px;
+      letter-spacing: 0;
+    }
+
+    .metric-label {
+      color: var(--ash);
+      font-size: 13px;
+      letter-spacing: 0;
+    }
+
+    /* 内容区：标题 + 双列卡片流 */
+    .content-shell {
+      padding: 48px 24px 68px;
+    }
+
+    .content-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .content-heading .section-kicker {
+      font-family: var(--font-serif);
+      font-style: italic;
+      letter-spacing: .04em;
+      text-transform: none;
+    }
+
+    .content-heading h2 {
+      margin: 0;
+      color: var(--carbon);
+      font-family: var(--font-display);
+      font-size: 40px;
+      font-weight: 600;
+      line-height: 1.08;
+      letter-spacing: -.045em;
+    }
+
+    .content-heading p {
+      margin: 10px 0 0;
+      color: var(--ash);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .tabs {
+      gap: 26px;
+      margin-bottom: 18px;
+    }
+
+    .tab { font-size: 13px; }
+
+    .result-toolbar {
+      min-height: 38px;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 10px;
+    }
+
+    .result-count {
+      margin-right: auto;
+    }
+
+    .lang-switch {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px;
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-pill);
+      background: var(--surface-2);
+    }
+
+    .lang-btn {
+      min-height: 28px;
+      padding: 4px 12px;
+      border: 0;
+      border-radius: var(--radius-pill);
+      color: var(--ash);
+      background: transparent;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition:
+        background-color .16s var(--ease),
+        color .16s var(--ease);
+    }
+
+    .lang-btn.active {
+      color: var(--carbon);
+      background: var(--surface);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, .08);
+    }
+
+    .results {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .paper-card {
+      min-width: 0;
+      min-height: 272px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--hairline);
+      border-radius: 18px;
+      background: #fff;
+      transition:
+        transform .18s var(--ease),
+        border-color .18s var(--ease);
+    }
+
+    .paper-card:hover {
+      border-color: var(--mist);
+      transform: translateY(-2px);
+    }
+
+    .paper-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .card-kicker {
+      color: var(--blue-outline);
+      font-family: var(--font-serif);
+      font-size: 13px;
+      font-style: italic;
+      letter-spacing: .01em;
+    }
+
+    .card-cites {
+      flex: none;
+      color: var(--ash);
+      font-size: 12px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .card-title {
+      margin: 16px 0 0;
+      color: var(--carbon);
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 600;
+      line-height: 1.22;
+      letter-spacing: -.032em;
+      text-align: left;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .card-title:hover { color: var(--blue-outline); }
+
+    .card-meta {
+      margin-top: 8px;
+      color: var(--ash);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .card-abstract {
+      margin: 12px 0 0;
+      color: var(--graphite);
+      font-size: 14px;
+      line-height: 1.6;
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+    }
+
+    .card-tags {
+      margin-top: auto;
+      padding-top: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .card-actions {
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .card-actions .text-action {
+      font-size: 12px;
+    }
+
+    .tag.translated::before { background: var(--green); }
+
+    .insights-inner { padding: 60px 24px 66px; }
+
+    .section-heading .section-kicker {
+      font-family: var(--font-serif);
+      font-style: italic;
+      letter-spacing: .04em;
+      text-transform: none;
+    }
+
+    .section-heading h2 {
+      font-family: var(--font-display);
+      font-size: 40px;
+      font-weight: 600;
+      letter-spacing: -.045em;
+    }
+
+    .insights-grid { gap: 58px; }
+
+    .insight h3 {
+      font-family: var(--font-display);
+      font-size: 18px;
+      letter-spacing: -.02em;
+    }
+
+    .topic-line { grid-template-columns: 126px 1fr 40px; }
+
+    @media (max-width: 960px) {
+      .hero {
+        grid-template-columns: 1fr;
+        gap: 42px;
+        padding-top: 52px;
+      }
+
+      .hero h1 { font-size: 58px; }
+
+      .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+      .metric { padding: 22px 18px; }
+      .metric + .metric { border-left: 0; }
+      .metric:nth-child(2n) { border-left: 1px solid var(--hairline); }
+      .metric:nth-child(n+3) { border-top: 1px solid var(--hairline); }
+
+      .results { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 620px) {
+      .hero { padding: 42px 16px 30px; }
+      .hero h1 { font-size: 44px; }
+      .hero-sub { font-size: 17px; }
+
+      .featured-card {
+        min-height: 0;
+        padding: 20px;
+      }
+
+      .featured-title { font-size: 28px; }
+
+      .metrics {
+        display: flex;
+        grid-template-columns: none;
+        margin-right: -16px;
+        padding-right: 16px;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+
+      .metrics::-webkit-scrollbar { display: none; }
+
+      .metric {
+        min-width: 160px;
+        padding: 0 22px;
+      }
+
+      .metric + .metric { border-left: 0; }
+      .metric:nth-child(2n),
+      .metric:nth-child(n+3) { border: 0; }
+      .metric:not(:last-child) { border-right: 1px solid var(--hairline); }
+
+      .content-shell { padding: 36px 16px 48px; }
+      .content-head { align-items: flex-start; flex-direction: column; }
+      .content-heading h2 { font-size: 34px; }
+      .result-toolbar { flex-wrap: wrap; }
+      .result-count { width: 100%; }
+      .sort-select { margin-left: auto; }
+
+      .paper-card { padding: 18px; }
+
+      .insights-inner { padding: 42px 16px 48px; }
+      .section-heading h2 { font-size: 34px; }
+      .insights-grid { gap: 38px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="global-nav">
+    <div class="nav-inner">
+      <a class="brand" href="#" aria-label="电力市场前沿追踪">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="2.4" fill="currentColor" stroke="none"></circle>
+            <path d="M12 12 18.2 6.4"></path>
+            <path d="M12 12 5.8 16.2"></path>
+            <path d="M12 12 17.2 17.2"></path>
+          </svg>
+        </span>
+        <span>电力市场前沿追踪</span>
+      </a>
+
+      <nav class="nav-links" aria-label="主导航">
+        <a class="active" href="#">发现</a>
+        <a href="#insights">热点</a>
+        <a href="#" data-action="show-fav">收藏</a>
+      </nav>
+
+      <div class="nav-actions">
+        <span class="update-label" id="updateLabel">尚未抓取真实数据</span>
+        <button class="pill-btn" id="exportBtn" type="button">导出收藏</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="demo-note">独立设计 Demo，仅作验收预览，未改动正式页面</div>
+        <p class="hero-kicker">Power Market Research</p>
+        <h1>把散落的前沿<br>变成今天能用的判断</h1>
+        <p class="hero-sub" id="heroSub">每日自动追踪电力市场研究热点、重点期刊与新增文献。</p>
+
+        <div class="search-shell" role="search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="6.5"></circle>
+            <path d="m16 16 4.2 4.2"></path>
+          </svg>
+          <input id="searchInput" type="search" aria-label="搜索文献" placeholder="搜索标题、作者、期刊或主题">
+          <button class="search-clear" id="clearSearch" type="button" aria-label="清空搜索" hidden>✕</button>
+        </div>
+
+        <div class="quick-topics" id="quickTopics"></div>
+      </div>
+
+      <aside class="hero-visual">
+        <div class="featured-card" id="featuredCard"></div>
+      </aside>
+    </section>
+
+    <section class="metrics" id="metrics" aria-label="数据概况"></section>
+
+    <section class="content-shell">
+      <div class="content-head">
+        <div class="content-heading">
+          <p class="section-kicker">Latest Research</p>
+          <h2>最近文献</h2>
+          <p>按时间、主题和引用速度浏览最新进入本地资料库的研究。</p>
+        </div>
+      </div>
+
+      <div class="tabs" id="tabs" role="tablist">
+        <button class="tab active" type="button" data-tab="all">全部</button>
+        <button class="tab" type="button" data-tab="7">近 7 天</button>
+        <button class="tab" type="button" data-tab="30">近 30 天</button>
+        <button class="tab" type="button" data-tab="fav">收藏</button>
+        <button class="tab" type="button" data-tab="unread">未读</button>
+        <button class="tab" type="button" data-tab="new">今日新增</button>
+      </div>
+
+      <div class="result-toolbar">
+        <div class="result-count" id="resultCount"></div>
+        <div class="lang-switch" role="group" aria-label="显示语言">
+          <button class="lang-btn active" type="button" data-lang="zh">中文</button>
+          <button class="lang-btn" type="button" data-lang="en">原文</button>
+        </div>
+        <select class="sort-select" id="sortSelect" aria-label="排序方式">
+          <option value="newest">最新发表</option>
+          <option value="cited">总被引</option>
+          <option value="velocity">引用速度</option>
+          <option value="venue">重点期刊优先</option>
+        </select>
+      </div>
+
+      <div class="results" id="results"></div>
+      <button class="load-more" id="loadMore" type="button" hidden>加载更多</button>
+    </section>
+
+    <section class="insights" id="insights">
+      <div class="insights-inner">
+        <div class="section-heading">
+          <p class="section-kicker">Research Insight</p>
+          <h2>研究洞察</h2>
+          <p>从标题、主题和来源中自动提取，帮助你快速判断最近值得关注的方向。</p>
+        </div>
+
+        <div class="insights-grid">
+          <div class="insight">
+            <h3>热点主题</h3>
+            <div id="hotTopics"></div>
+            <p class="insight-note">按近半年热度与重点期刊占比综合排序。</p>
+          </div>
+
+          <div class="insight">
+            <h3>上升关键词</h3>
+            <div class="keyword-cloud" id="risingKeywords"></div>
+            <p class="insight-note">从标题中提取，反映最近正在冒头的新术语。</p>
+          </div>
+
+          <div class="insight">
+            <h3>来源分布</h3>
+            <div id="sourceStats"></div>
+            <p class="insight-note">当前样本来源分布。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>数据来源：OpenAlex · arXiv · Crossref（可选 Semantic Scholar）</p>
+    <p>本页为设计验收 Demo，演示数据仅用于界面预览。</p>
+  </footer>
+
+  <div class="modal" id="detailModal" role="dialog" aria-modal="true" hidden>
+    <div class="sheet">
+      <div class="sheet-head">
+        <h3 class="sheet-title" id="detailTitle"></h3>
+        <button class="close-btn" id="closeDetail" type="button" aria-label="关闭">✕</button>
+      </div>
+      <div class="sheet-meta" id="detailMeta"></div>
+      <p class="sheet-abstract" id="detailAbstract"></p>
+      <div class="sheet-actions" id="detailActions"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="data/demo.js"></script>
+  <script>
+    (function () {
+      "use strict";
+
+      var DATA = window.__PM_DEMO__ || { papers: [], topics: [], insights: { hotspots: [], rising: [], summary: {} }, meta: {} };
+      DATA.papers = DATA.papers || [];
+      DATA.topics = DATA.topics || [];
+      DATA.insights = DATA.insights || { hotspots: [], rising: [], summary: {} };
+      DATA.meta = DATA.meta || {};
+
+      var TOPIC_MAP = {};
+      DATA.topics.forEach(function (t) { TOPIC_MAP[t.id] = t; });
+
+      var VENUE_ZH = {
+        "Applied Energy": "应用能源",
+        "The Energy Journal": "能源期刊",
+        "Ieee Transactions On Power Systems": "IEEE 电力系统汇刊",
+        "Energy Policy": "能源政策",
+        "Nature Energy": "自然·能源",
+        "Ieee Transactions On Smart Grid": "IEEE 智能电网汇刊",
+        "Ieee Transactions On Energy Markets, Policy And Regulation": "IEEE 能源市场、政策与监管汇刊",
+        "Ieee Transactions On Power Delivery": "IEEE 电力输送汇刊",
+        "Ieee Transactions On Sustainable Energy": "IEEE 可持续能源汇刊",
+        "Ieee Transactions On Industrial Informatics": "IEEE 工业信息学汇刊",
+        "Energy": "能源",
+        "Renewable And Sustainable Energy Reviews": "可再生与可持续能源评论",
+        "Joule": "焦耳",
+        "Energy Economics": "能源经济学"
+      };
+
+      function hasChinese(s) {
+        return /[\u4e00-\u9fff]/.test(String(s || ""));
+      }
+
+      function ensureTranslation(p) {
+        if (!p) return p;
+        if (!p.title_zh && hasChinese(p.title)) p.title_zh = p.title;
+        if (!p.abstract_zh && hasChinese(p.abstract)) p.abstract_zh = p.abstract;
+        if (!p.venue_zh) p.venue_zh = VENUE_ZH[p.venue] || "";
+        if (!p.title_en) p.title_en = hasChinese(p.title) ? "" : (p.title || "");
+        if (!p.abstract_en) p.abstract_en = hasChinese(p.abstract) ? "" : (p.abstract || "");
+        return p;
+      }
+
+      DATA.papers = DATA.papers.map(ensureTranslation);
+
+      var favSet = loadSet("pmr.demo.fav");
+      var readSet = loadSet("pmr.demo.read");
+
+      var state = {
+        q: "",
+        tab: "all",
+        sort: "newest",
+        page: 1,
+        selectedTopic: null,
+        lang: "zh"
+      };
+
+      var PAGE_SIZE = 8;
+
+      function loadSet(key) {
+        try {
+          var raw = localStorage.getItem(key);
+          return new Set(raw ? JSON.parse(raw) : []);
+        } catch (e) { return new Set(); }
+      }
+
+      function saveSet(key, set) {
+        try { localStorage.setItem(key, JSON.stringify(Array.from(set))); } catch (e) {}
+      }
+
+      function $(id) { return document.getElementById(id); }
+
+      function esc(s) {
+        return String(s == null ? "" : s)
+          .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+      }
+
+      function daysSince(iso) {
+        if (!iso) return 1e9;
+        var d = new Date(iso.slice(0, 10) + "T00:00:00");
+        if (isNaN(d)) return 1e9;
+        return Math.floor((Date.now() - d.getTime()) / 86400000);
+      }
+
+      function fmtDate(iso) {
+        var m = String(iso || "").match(/^(\d{4})-(\d{2})-(\d{2})/);
+        if (!m) return "日期未知";
+        return m[1] + "年" + parseInt(m[2], 10) + "月";
+      }
+
+      function topicName(id) {
+        var t = TOPIC_MAP[id];
+        return t ? t.zh : id;
+      }
+
+      function displayTitle(p) {
+        if (state.lang === "zh") return p.title_zh || p.title || "未命名文献";
+        return p.title_en || p.title || "未命名文献";
+      }
+
+      function displayAbstract(p) {
+        if (state.lang === "zh") return p.abstract_zh || p.abstract || "暂无摘要";
+        return p.abstract_en || p.abstract || "暂无摘要";
+      }
+
+      function displayVenue(p) {
+        if (state.lang === "zh") return p.venue_zh || p.venue || (p.source_name || p.source || "未标注来源");
+        return p.venue || (p.source_name || p.source || "未标注来源");
+      }
+
+      function hasAutoTranslation(p) {
+        return Boolean(
+          (state.lang === "zh" && p.title_zh && p.title_zh !== p.title) ||
+          (state.lang === "zh" && p.abstract_zh && p.abstract_zh !== p.abstract) ||
+          (state.lang === "zh" && p.venue_zh && p.venue_zh !== p.venue)
+        );
+      }
+
+      function paperText(p) {
+        return [
+          p.title || "",
+          p.abstract || "",
+          (p.authors || []).join(" "),
+          p.venue || "",
+          (p.topics || []).map(topicName).join(" ")
+        ].join(" ").toLowerCase();
+      }
+
+      function filtered() {
+        var q = state.q.trim().toLowerCase();
+        var days = state.tab === "7" ? 7 : (state.tab === "30" ? 30 : 0);
+        var out = DATA.papers.filter(function (p) {
+          if (days && daysSince(p.date) > days) return false;
+          if (state.tab === "fav" && !favSet.has(p.uid)) return false;
+          if (state.tab === "unread" && readSet.has(p.uid)) return false;
+          if (state.tab === "new" && !p.is_new) return false;
+          if (state.selectedTopic && !(p.topics || []).includes(state.selectedTopic)) return false;
+          if (q && paperText(p).indexOf(q) < 0) return false;
+          return true;
+        });
+
+        out.sort(function (a, b) {
+          if (state.sort === "cited") return (b.citations || 0) - (a.citations || 0);
+          if (state.sort === "velocity") return (b.cite_per_year || 0) - (a.cite_per_year || 0);
+          if (state.sort === "venue") return (b.journal_weight || 0) - (a.journal_weight || 0) ||
+            String(b.date || "").localeCompare(String(a.date || ""));
+          return String(b.date || "").localeCompare(String(a.date || "")) ||
+            (b.citations || 0) - (a.citations || 0);
+        });
+        return out;
+      }
+
+      function renderHeader() {
+        var m = DATA.meta || {};
+        $("updateLabel").textContent = m.updated_at ? "更新于 " + m.updated_at : "尚未抓取真实数据";
+        $("heroSub").textContent = (DATA.papers.length || 0) >= 1
+          ? "每日自动追踪电力市场研究热点、重点期刊与新增文献。"
+          : "先运行「一键更新.bat」抓取真实文献。";
+      }
+
+      function renderMetrics() {
+        var m = DATA.meta || {};
+        var ins = DATA.insights.summary || {};
+        var total = m.total || DATA.papers.length || 0;
+        var recent = m.recent30 || ins.recent30 || 0;
+        var topics = (DATA.insights.hotspots || []).length || DATA.topics.length || 0;
+        var oa = m.oa || ins.oa || 0;
+
+        $("metrics").innerHTML =
+          '<div class="metric"><div class="metric-value">' + total + '<small>篇</small></div><div class="metric-label">已收录文献</div></div>' +
+          '<div class="metric"><div class="metric-value">' + recent + '<small>篇</small></div><div class="metric-label">近 30 天新增</div></div>' +
+          '<div class="metric"><div class="metric-value">' + oa + '<small>篇</small></div><div class="metric-label">开放获取</div></div>' +
+          '<div class="metric"><div class="metric-value">' + topics + '<small>个</small></div><div class="metric-label">覆盖主题</div></div>';
+      }
+
+      function renderQuickTopics() {
+        var counts = {};
+        DATA.papers.forEach(function (p) {
+          (p.topics || []).forEach(function (t) { counts[t] = (counts[t] || 0) + 1; });
+        });
+
+        var list = DATA.topics.slice().sort(function (a, b) {
+          return (counts[b.id] || 0) - (counts[a.id] || 0);
+        }).slice(0, 8);
+
+        $("quickTopics").innerHTML = list.map(function (t) {
+          return '<button class="topic-pill" type="button" data-topic="' + esc(t.id) + '">' +
+            esc(t.zh) + ' <span class="muted">' + (counts[t.id] || 0) + '</span></button>';
+        }).join("");
+
+        Array.prototype.forEach.call($("quickTopics").querySelectorAll("[data-topic]"), function (btn) {
+          btn.addEventListener("click", function () {
+            var id = btn.getAttribute("data-topic");
+            state.selectedTopic = state.selectedTopic === id ? null : id;
+            state.tab = "all";
+            state.page = 1;
+            syncTabs();
+            renderQuickTopics();
+            renderResults();
+          });
+        });
+      }
+
+      function syncTabs() {
+        Array.prototype.forEach.call(document.querySelectorAll("#tabs .tab"), function (btn) {
+          btn.classList.toggle("active", btn.getAttribute("data-tab") === state.tab);
+        });
+        $("results").scrollIntoView({ block: "start", behavior: "smooth" });
+      }
+
+      function renderFeatured() {
+        var paper = filtered()[0] || DATA.papers[0];
+        var box = $("featuredCard");
+        if (!paper) {
+          box.innerHTML = '<div class="featured-label">Featured Research</div><p class="muted" style="margin-top:26px">暂无重点文献</p>';
+          return;
+        }
+
+        var primaryTopic = paper.topic_primary || (paper.topics || [])[0] || "";
+        var topic = topicName(primaryTopic) || "重点研究";
+        var authors = (paper.authors || []).slice(0, 3).join("、");
+        if ((paper.authors || []).length > 3) authors += " 等";
+        var venue = displayVenue(paper);
+        var url = paper.url || (paper.doi ? "https://doi.org/" + paper.doi : "");
+        var velocity = paper.cite_per_year != null ? Number(paper.cite_per_year).toFixed(1) : "—";
+
+        box.innerHTML =
+          '<div class="featured-label">Featured Research</div>' +
+          '<h3 class="featured-title">' + esc(displayTitle(paper)) + '</h3>' +
+          '<div class="featured-meta">' +
+            '<span>' + esc(topic) + '</span>' +
+            '<span>' + esc(venue) + '</span>' +
+            '<span>' + esc(authors || "作者未标注") + '</span>' +
+            '<span>' + esc(fmtDate(paper.date)) + '</span>' +
+          '</div>' +
+          '<p class="featured-abstract">' + esc(displayAbstract(paper)) + '</p>' +
+          '<div class="featured-stats">' +
+            '<div class="featured-stat"><b>' + (paper.citations || 0) + '</b><span>总被引</span></div>' +
+            '<div class="featured-stat"><b>' + velocity + '</b><span>引用速度</span></div>' +
+            '<div class="featured-stat"><b>' + (paper.is_top_venue ? "TOP" : "—") + '</b><span>期刊层级</span></div>' +
+          '</div>' +
+          '<div class="featured-actions">' +
+            '<button class="pill-btn primary" type="button" data-featured-action="detail" data-uid="' + esc(paper.uid) + '">阅读详情</button>' +
+            (url ? '<a class="outline-btn" href="' + esc(url) + '" target="_blank" rel="noopener">打开原文</a>' : '') +
+          '</div>';
+
+        Array.prototype.forEach.call(box.querySelectorAll("[data-featured-action]"), function (btn) {
+          btn.addEventListener("click", function () {
+            var uid = btn.getAttribute("data-uid");
+            var p = DATA.papers.filter(function (x) { return x.uid === uid; })[0];
+            if (p) openDetail(p);
+          });
+        });
+      }
+
+      function badgeHtml(p) {
+        var tags = [];
+        (p.topics || []).slice(0, 3).forEach(function (t) {
+          tags.push('<span class="tag">' + esc(topicName(t)) + '</span>');
+        });
+        if (p.is_new) tags.push('<span class="tag new">今日新增</span>');
+        if (p.is_top_venue) tags.push('<span class="tag top">重点期刊</span>');
+        if (p.is_oa) tags.push('<span class="tag oa">开放获取</span>');
+        return tags.join("");
+      }
+
+      function renderResults() {
+        var rows = filtered();
+        var shown = rows.slice(0, state.page * PAGE_SIZE);
+
+        $("resultCount").innerHTML = rows.length
+          ? "找到 <strong>" + rows.length + "</strong> 篇文献"
+          : "没有符合条件的文献";
+
+        var box = $("results");
+        if (!rows.length) {
+          box.innerHTML = '<div class="muted" style="padding:50px 0;text-align:center">试试放宽时间范围，或清空搜索条件。</div>';
+        } else {
+          box.innerHTML = shown.map(function (p) {
+            var isFav = favSet.has(p.uid);
+            var isRead = readSet.has(p.uid);
+            var primaryTopic = p.topic_primary || (p.topics || [])[0] || "";
+            var topic = topicName(primaryTopic) || "电力市场研究";
+            var url = p.url || (p.doi ? "https://doi.org/" + p.doi : "");
+            var authors = (p.authors || []).slice(0, 3).join("、");
+            if ((p.authors || []).length > 3) authors += " 等";
+            var venue = displayVenue(p);
+            var date = fmtDate(p.date);
+
+            var actions = [];
+            actions.push('<button class="text-action' + (isFav ? " on" : "") + '" type="button" data-action="fav" data-uid="' + esc(p.uid) + '">' + (isFav ? "已收藏" : "收藏") + '</button>');
+            actions.push('<button class="text-action' + (isRead ? " read-on" : "") + '" type="button" data-action="read" data-uid="' + esc(p.uid) + '">' + (isRead ? "已读" : "标记已读") + '</button>');
+            actions.push('<button class="text-action" type="button" data-action="detail" data-uid="' + esc(p.uid) + '">详情</button>');
+            if (url) actions.push('<a class="text-action" href="' + esc(url) + '" target="_blank" rel="noopener">打开原文</a>');
+
+            var tags = badgeHtml(p);
+            if (hasAutoTranslation(p)) tags += '<span class="tag translated">已译</span>';
+
+            return '<article class="paper-card" data-uid="' + esc(p.uid) + '">' +
+              '<div class="paper-card-top">' +
+                '<span class="card-kicker">' + esc(topic) + '</span>' +
+                '<span class="card-cites">被引 ' + (p.citations || 0) + '</span>' +
+              '</div>' +
+              '<button class="card-title" type="button" data-action="detail" data-uid="' + esc(p.uid) + '">' + esc(displayTitle(p)) + '</button>' +
+              '<div class="card-meta">' + esc(authors || "作者未标注") + ' · ' + esc(venue) + ' · ' + esc(date) + '</div>' +
+              '<p class="card-abstract">' + esc(displayAbstract(p)) + '</p>' +
+              '<div class="card-tags">' + tags + '</div>' +
+              '<div class="card-actions">' + actions.join("") + '</div>' +
+            '</article>';
+          }).join("");
+        }
+
+        $("loadMore").hidden = shown.length >= rows.length;
+        $("loadMore").textContent = rows.length > shown.length
+          ? "加载更多（还有 " + (rows.length - shown.length) + " 篇）"
+          : "";
+
+        renderFeatured();
+        bindResultEvents();
+      }
+
+      function bindResultEvents() {
+        Array.prototype.forEach.call($("results").querySelectorAll("[data-action]"), function (el) {
+          el.addEventListener("click", function () {
+            var uid = el.getAttribute("data-uid");
+            var paper = DATA.papers.filter(function (p) { return p.uid === uid; })[0];
+            if (!paper) return;
+            var action = el.getAttribute("data-action");
+
+            if (action === "fav") {
+              if (favSet.has(uid)) { favSet.delete(uid); toast("已取消收藏"); }
+              else { favSet.add(uid); toast("已加入收藏"); }
+              saveSet("pmr.demo.fav", favSet);
+              renderResults();
+            } else if (action === "read") {
+              if (readSet.has(uid)) { readSet.delete(uid); toast("已标记为未读"); }
+              else { readSet.add(uid); toast("已标记为已读"); }
+              saveSet("pmr.demo.read", readSet);
+              renderResults();
+            } else if (action === "detail") {
+              openDetail(paper);
+            }
+          });
+        });
+      }
+
+      function renderInsights() {
+        var hot = (DATA.insights.hotspots || []).slice(0, 8);
+        var maxScore = Math.max.apply(null, hot.map(function (h) { return h.score || 0; }).concat([1]));
+
+        $("hotTopics").innerHTML = hot.map(function (h) {
+          var w = Math.round(((h.score || 0) / maxScore) * 100);
+          return '<div class="topic-line">' +
+            '<span class="topic-name">' + esc(h.zh) + '</span>' +
+            '<span class="topic-bar"><i style="width:' + w + '%"></i></span>' +
+            '<span class="topic-score">' + (h.score || 0) + '</span>' +
+          '</div>';
+        }).join("") || '<p class="muted">暂无热点主题</p>';
+
+        var rising = DATA.insights.rising || [];
+        if (rising.length) {
+          var maxWeight = Math.max.apply(null, rising.map(function (r) { return r.weight || 0; }).concat([1]));
+          $("risingKeywords").innerHTML = rising.slice(0, 24).map(function (r) {
+            var size = 12 + Math.round(((r.weight || 0) / maxWeight) * 8);
+            return '<span class="' + (r.is_new ? "fresh" : "") + '" style="font-size:' + size + 'px">' + esc(r.term) + '</span>';
+          }).join("");
+        } else {
+          $("risingKeywords").innerHTML = '<span>现货市场</span><span>市场出清</span><span>节点电价</span><span>碳市场</span><span>储能套利</span><span>容量市场</span>';
+        }
+
+        var sources = (DATA.insights.summary && DATA.insights.summary.sources) || [{ name: "演示数据", count: DATA.papers.length }];
+        var maxCount = Math.max.apply(null, sources.map(function (s) { return s.count; }).concat([1]));
+        $("sourceStats").innerHTML = sources.slice(0, 8).map(function (s) {
+          return '<div class="source-line">' +
+            '<span class="source-name">' + esc(s.name) + '</span>' +
+            '<span class="source-bar"><i style="width:' + Math.round(s.count / maxCount * 100) + '%"></i></span>' +
+            '<span class="source-num">' + s.count + '</span>' +
+          '</div>';
+        }).join("");
+      }
+
+      function openDetail(paper) {
+        $("detailTitle").textContent = displayTitle(paper);
+        var meta = [];
+        meta.push((paper.authors || []).join("、") || "作者未标注");
+        if (paper.venue) meta.push(displayVenue(paper));
+        meta.push(fmtDate(paper.date));
+        if (paper.citations) meta.push("被引 " + paper.citations);
+        $("detailMeta").textContent = meta.join(" · ");
+        $("detailAbstract").textContent = displayAbstract(paper);
+
+        var isFav = favSet.has(paper.uid);
+        var isRead = readSet.has(paper.uid);
+        var url = paper.url || (paper.doi ? "https://doi.org/" + paper.doi : "");
+        var html = '';
+        html += '<button class="pill-btn primary" type="button" data-detail-action="fav" data-uid="' + esc(paper.uid) + '">' + (isFav ? "已收藏" : "收藏") + '</button>';
+        html += '<button class="outline-btn" type="button" data-detail-action="read" data-uid="' + esc(paper.uid) + '">' + (isRead ? "已读" : "标记已读") + '</button>';
+        if (url) html += '<a class="outline-btn" href="' + esc(url) + '" target="_blank" rel="noopener">打开原文</a>';
+        $("detailActions").innerHTML = html;
+
+        Array.prototype.forEach.call($("detailActions").querySelectorAll("[data-detail-action]"), function (btn) {
+          btn.addEventListener("click", function () {
+            var action = btn.getAttribute("data-detail-action");
+            if (action === "fav") {
+              if (favSet.has(paper.uid)) { favSet.delete(paper.uid); toast("已取消收藏"); }
+              else { favSet.add(paper.uid); toast("已加入收藏"); }
+              saveSet("pmr.demo.fav", favSet);
+              renderResults();
+              openDetail(paper);
+            } else if (action === "read") {
+              if (readSet.has(paper.uid)) { readSet.delete(paper.uid); toast("已标记为未读"); }
+              else { readSet.add(paper.uid); toast("已标记为已读"); }
+              saveSet("pmr.demo.read", readSet);
+              renderResults();
+              openDetail(paper);
+            }
+          });
+        });
+
+        $("detailModal").hidden = false;
+        document.body.style.overflow = "hidden";
+        setTimeout(function () { $("closeDetail").focus(); }, 0);
+      }
+
+      function closeDetail() {
+        if ($("detailModal").hidden) return;
+        $("detailModal").hidden = true;
+        document.body.style.overflow = "";
+      }
+
+      var toastTimer = null;
+      function toast(msg) {
+        var el = $("toast");
+        el.textContent = msg;
+        el.hidden = false;
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(function () { el.hidden = true; }, 2200);
+      }
+
+      function syncLangButtons() {
+        Array.prototype.forEach.call(document.querySelectorAll(".lang-btn"), function (btn) {
+          btn.classList.toggle("active", btn.getAttribute("data-lang") === state.lang);
+        });
+      }
+
+      function bindEvents() {
+        var input = $("searchInput");
+        var timer = null;
+        input.addEventListener("input", function () {
+          clearTimeout(timer);
+          timer = setTimeout(function () {
+            state.q = input.value;
+            state.page = 1;
+            $("clearSearch").hidden = !input.value;
+            renderResults();
+          }, 160);
+        });
+
+        $("clearSearch").addEventListener("click", function () {
+          input.value = "";
+          state.q = "";
+          state.page = 1;
+          $("clearSearch").hidden = true;
+          renderResults();
+        });
+
+        $("sortSelect").addEventListener("change", function () {
+          state.sort = this.value;
+          state.page = 1;
+          renderResults();
+        });
+
+        Array.prototype.forEach.call(document.querySelectorAll(".lang-btn"), function (btn) {
+          btn.addEventListener("click", function () {
+            state.lang = btn.getAttribute("data-lang");
+            syncLangButtons();
+            renderResults();
+          });
+        });
+
+        Array.prototype.forEach.call(document.querySelectorAll("#tabs .tab"), function (btn) {
+          btn.addEventListener("click", function () {
+            state.tab = btn.getAttribute("data-tab");
+            state.page = 1;
+            state.selectedTopic = null;
+            syncTabs();
+            renderQuickTopics();
+            renderResults();
+          });
+        });
+
+        document.querySelector('[data-action="show-fav"]').addEventListener("click", function (e) {
+          e.preventDefault();
+          state.tab = "fav";
+          state.page = 1;
+          state.selectedTopic = null;
+          syncTabs();
+          renderQuickTopics();
+          renderResults();
+        });
+
+        $("loadMore").addEventListener("click", function () {
+          state.page += 1;
+          renderResults();
+        });
+
+        $("exportBtn").addEventListener("click", function () {
+          var list = DATA.papers.filter(function (p) { return favSet.has(p.uid); });
+          if (!list.length) { toast("收藏夹为空"); return; }
+          var text = list.map(function (p, i) {
+            return (i + 1) + ". " + (p.title || "") + " — " + ((p.authors || []).join(", ") || "作者未标注") +
+              " (" + (p.year || "n.d.") + ")" + (p.doi ? " https://doi.org/" + p.doi : "");
+          }).join("\n");
+          download("电力市场前沿_收藏.txt", text);
+          toast("已开始下载");
+        });
+
+        $("closeDetail").addEventListener("click", closeDetail);
+        $("detailModal").addEventListener("click", function (e) {
+          if (e.target === $("detailModal")) closeDetail();
+        });
+
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape" && !$("detailModal").hidden) closeDetail();
+          if (e.key === "/" && $("detailModal").hidden && document.activeElement !== $("searchInput")) {
+            e.preventDefault();
+            $("searchInput").focus();
+          }
+        });
+      }
+
+      function download(filename, text) {
+        var blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
+      }
+
+      function init() {
+        renderHeader();
+        renderMetrics();
+        renderQuickTopics();
+        syncLangButtons();
+        renderResults();
+        renderInsights();
+        bindEvents();
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", init);
+      } else {
+        init();
+      }
+    })();
+  </script>
+</body>
+</html>

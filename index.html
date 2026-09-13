@@ -1,213 +1,156 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-theme="dark">
+<html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="color-scheme" content="dark light">
-<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)">
-<title>电力市场研究前沿追踪</title>
-<meta name="description" content="每日自动追踪电力市场研究的前沿热点与重要文献">
-<link rel="stylesheet" href="assets/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#f5f5f7">
+  <title>电力市场研究前沿追踪</title>
+  <meta name="description" content="每日自动追踪电力市场研究的前沿热点与重要文献">
+  <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
+  <header class="global-nav">
+    <div class="nav-inner">
+      <a class="brand" href="#" aria-label="电力市场前沿追踪">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="2.4" fill="currentColor" stroke="none"></circle>
+            <path d="M12 12 18.2 6.4"></path>
+            <path d="M12 12 5.8 16.2"></path>
+            <path d="M12 12 17.2 17.2"></path>
+          </svg>
+        </span>
+        <span>电力市场前沿追踪</span>
+      </a>
 
-<header class="topbar" role="banner">
-  <div class="topbar-inner">
-    <div class="brand">
-      <div class="brand-mark" aria-hidden="true">⚡</div>
-      <div class="brand-text">
-        <h1>电力市场研究前沿追踪</h1>
-        <p>Power Market Research Radar</p>
+      <nav class="nav-links" aria-label="主导航">
+        <a class="active" href="#">发现</a>
+        <a href="#insights">热点</a>
+        <a href="#" data-action="show-fav">收藏</a>
+      </nav>
+
+      <div class="nav-actions">
+        <span class="update-label" id="updateLabel">加载中…</span>
+        <button class="pill-btn" id="exportBtn" type="button">导出收藏</button>
       </div>
     </div>
-    <div class="topbar-actions">
-      <div class="update-chip" id="updateChip" title="数据更新时间">
-        <span class="dot"></span>
-        <span id="updateText">加载中…</span>
-      </div>
-      <button class="btn icon-btn" id="themeBtn" type="button" aria-label="切换深浅色" title="切换深浅色">◐</button>
-      <button class="btn ghost" id="exportBtn" type="button" aria-label="导出收藏" title="导出收藏">
-        <span aria-hidden="true">↗</span><span class="btn-label">导出</span>
-      </button>
-    </div>
-  </div>
-</header>
+  </header>
 
-<div class="banner" id="demoBanner" hidden>
-  <span>当前显示的是 <b>演示数据</b>，仅用于预览界面，不是真实文献。</span>
-  <span class="banner-hint">双击运行「一键更新.bat」抓取真实文献后，会自动切换为本领域的实际检索结果。</span>
-</div>
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="hero-kicker">Power Market Research</p>
+        <h1>把散落的前沿<br>变成今天能用的判断</h1>
+        <p class="hero-sub" id="heroSub">每日自动追踪电力市场研究热点、重点期刊与新增文献。</p>
 
-<div class="banner warn" id="errorBanner" hidden></div>
-
-<main class="wrap">
-
-  <section class="page-heading" aria-labelledby="pageTitle">
-    <div class="page-heading-copy">
-      <p class="eyebrow">ELECTRICITY MARKET INTELLIGENCE</p>
-      <h2 id="pageTitle">研究前沿</h2>
-      <p id="pageSummary">正在读取本地文献库…</p>
-    </div>
-    <div class="heading-badge" aria-hidden="true">LIVE</div>
-  </section>
-
-  <section class="stats" id="stats"></section>
-
-  <section class="toolbar card" aria-label="文献筛选与排序">
-    <div class="toolbar-row">
-      <div class="search" role="search">
-        <span class="search-icon" aria-hidden="true">⌕</span>
-        <input id="searchInput" type="search" aria-label="搜索文献" placeholder="搜索标题、摘要、作者、期刊，或输入中文主题（如 现货、储能、碳市场）">
-        <kbd class="key-hint" aria-hidden="true">/</kbd>
-        <button class="clear-search" id="clearSearch" type="button" aria-label="清空搜索" hidden>✕</button>
-      </div>
-      <select id="sortSelect" class="select" title="排序方式" aria-label="排序方式">
-        <option value="newest">最新发表</option>
-        <option value="relevance">相关度</option>
-        <option value="cited">总被引</option>
-        <option value="velocity">引用速度</option>
-        <option value="venue">重点期刊优先</option>
-      </select>
-    </div>
-
-    <div class="toolbar-row wrap-row">
-      <div class="chip-group segmented" id="rangeGroup" role="group" aria-label="时间范围">
-        <button class="chip" data-days="7">近 7 天</button>
-        <button class="chip" data-days="30">近 30 天</button>
-        <button class="chip" data-days="90">近 90 天</button>
-        <button class="chip" data-days="365">近一年</button>
-        <button class="chip active" data-days="0">全部时间</button>
-      </div>
-      <div class="chip-group" id="sourceGroup"></div>
-      <div class="chip-group">
-        <button class="chip toggle" id="favFilter">★ 只看收藏</button>
-        <button class="chip toggle" id="unreadFilter">◻ 只看未读</button>
-        <button class="chip toggle" id="newFilter">✦ 只看今日新增</button>
-        <button class="chip" id="resetBtn">重置筛选</button>
-      </div>
-    </div>
-
-    <div class="toolbar-row">
-      <div class="topic-bar" id="topicBar" role="group" aria-label="主题筛选"></div>
-    </div>
-  </section>
-
-  <div class="layout">
-
-    <section class="main-col">
-      <div class="list-head">
-        <div>
-          <p class="section-kicker">LIBRARY</p>
-          <h2 id="listTitle">文献列表</h2>
+        <div class="search-shell" role="search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="6.5"></circle>
+            <path d="m16 16 4.2 4.2"></path>
+          </svg>
+          <input id="searchInput" type="search" aria-label="搜索文献" placeholder="搜索标题、作者、期刊或主题">
+          <button class="search-clear" id="clearSearch" type="button" aria-label="清空搜索" hidden>✕</button>
         </div>
-        <div class="list-head-tools">
-          <span class="muted" id="resultCount" aria-live="polite"></span>
-        </div>
+
+        <div class="quick-topics" id="quickTopics"></div>
       </div>
-      <div id="paperList" class="paper-list"></div>
-      <button class="btn load-more" id="loadMoreBtn" type="button" hidden>加载更多</button>
-      <div class="empty" id="emptyState" hidden></div>
+
+      <aside class="hero-visual">
+        <div class="featured-card" id="featuredCard"></div>
+      </aside>
     </section>
 
-    <aside class="side-col">
+    <section class="metrics" id="metrics" aria-label="数据概况"></section>
 
-      <div class="card panel">
-        <div class="panel-head">
-          <h3>🔥 热点主题排行</h3>
-          <span class="muted" id="hotMeta"></span>
+    <section class="content-shell">
+      <div class="content-head">
+        <div class="content-heading">
+          <p class="section-kicker">Latest Research</p>
+          <h2>最近文献</h2>
+          <p>按时间、主题和引用速度浏览最新进入本地资料库的研究。</p>
         </div>
-        <div id="hotList" class="hot-list"></div>
       </div>
 
-      <div class="card panel">
-        <div class="panel-head">
-          <h3>📈 近 12 个月主题趋势</h3>
-        </div>
-        <div class="chart-box">
-          <svg id="trendChart" viewBox="0 0 520 260" preserveAspectRatio="xMidYMid meet"></svg>
-        </div>
-        <div class="legend" id="trendLegend"></div>
+      <div class="tabs" id="tabs" role="tablist">
+        <button class="tab active" type="button" data-tab="all">全部</button>
+        <button class="tab" type="button" data-tab="7">近 7 天</button>
+        <button class="tab" type="button" data-tab="30">近 30 天</button>
+        <button class="tab" type="button" data-tab="fav">收藏</button>
+        <button class="tab" type="button" data-tab="unread">未读</button>
+        <button class="tab" type="button" data-tab="new">今日新增</button>
       </div>
 
-      <div class="card panel">
-        <div class="panel-head">
-          <h3>🚀 上升关键词</h3>
-          <span class="muted">近半年对比前半年</span>
+      <div class="result-toolbar">
+        <div class="result-count" id="resultCount"></div>
+        <div class="lang-switch" role="group" aria-label="显示语言">
+          <button class="lang-btn active" type="button" data-lang="zh">中文</button>
+          <button class="lang-btn" type="button" data-lang="en">原文</button>
         </div>
-        <div class="cloud" id="risingCloud"></div>
-        <p class="panel-note">从标题中自动提取，反映正在冒头的新术语，不受预设主题限制。</p>
+        <select class="sort-select" id="sortSelect" aria-label="排序方式">
+          <option value="newest">最新发表</option>
+          <option value="cited">总被引</option>
+          <option value="velocity">引用速度</option>
+          <option value="venue">重点期刊优先</option>
+        </select>
       </div>
 
-      <div class="card panel">
-        <div class="panel-head">
-          <h3>🔎 中文库直达检索</h3>
+      <div class="results" id="results"></div>
+      <button class="load-more" id="loadMore" type="button" hidden>加载更多</button>
+    </section>
+
+    <section class="insights" id="insights">
+      <div class="insights-inner">
+        <div class="section-heading">
+          <p class="section-kicker">Research Insight</p>
+          <h2>研究洞察</h2>
+          <p>从标题、主题和来源中自动提取，帮助你快速判断最近值得关注的方向。</p>
         </div>
-        <p class="panel-note">国际数据源对中文期刊覆盖有限，可用下列入口在中文库中继续检索同一主题。</p>
-        <div class="cn-links" id="cnLinks"></div>
-      </div>
 
-      <div class="card panel">
-        <div class="panel-head">
-          <h3>📚 来源分布</h3>
+        <div class="insights-grid">
+          <div class="insight">
+            <h3>热点主题</h3>
+            <div id="hotTopics"></div>
+            <p class="insight-note">按近半年热度与重点期刊占比综合排序。</p>
+          </div>
+
+          <div class="insight">
+            <h3>上升关键词</h3>
+            <div class="keyword-cloud" id="risingKeywords"></div>
+            <p class="insight-note">从标题中提取，反映最近正在冒头的新术语。</p>
+          </div>
+
+          <div class="insight">
+            <h3>来源分布</h3>
+            <div id="sourceStats"></div>
+            <p class="insight-note">当前资料库来源分布。</p>
+          </div>
         </div>
-        <div class="source-stats" id="sourceStats"></div>
       </div>
+    </section>
+  </main>
 
-    </aside>
-  </div>
-
-  <footer class="footer">
-    <p>数据来源：OpenAlex · arXiv · Crossref（可选 Semantic Scholar）。本页数据由 <code>crawler/</code> 每日抓取后本地生成，不上传任何内容。</p>
-    <p class="muted">重新抓取：双击 <code>一键更新.bat</code>；设置每日自动更新：双击 <code>注册每日更新任务.bat</code>。</p>
+  <footer>
+    <p>数据来源：OpenAlex · arXiv · Crossref（可选 Semantic Scholar）</p>
+    <p>本页数据由 crawler 每日抓取后本地生成，标题、摘要和期刊名支持预翻译为中文。</p>
   </footer>
-</main>
 
-<div class="modal" id="detailModal" role="dialog" aria-modal="true" aria-labelledby="detailTitle" hidden>
-  <div class="modal-box detail-box" role="document">
-    <div class="sheet-grabber" aria-hidden="true"></div>
-    <div class="modal-head">
-      <div>
-        <p class="section-kicker">PAPER DETAIL</p>
-        <h3 id="detailTitle">论文详情</h3>
+  <div class="modal" id="detailModal" role="dialog" aria-modal="true" hidden>
+    <div class="sheet">
+      <div class="sheet-head">
+        <h3 class="sheet-title" id="detailTitle"></h3>
+        <button class="close-btn" id="closeDetail" type="button" aria-label="关闭">✕</button>
       </div>
-      <button class="btn icon-btn" id="closeDetail" type="button" aria-label="关闭">✕</button>
-    </div>
-    <div class="detail-content" id="detailContent"></div>
-  </div>
-</div>
-
-<div class="modal" id="exportModal" role="dialog" aria-modal="true" aria-labelledby="exportTitle" hidden>
-  <div class="modal-box" role="document">
-    <div class="sheet-grabber" aria-hidden="true"></div>
-    <div class="modal-head">
-      <div>
-        <p class="section-kicker">EXPORT</p>
-        <h3 id="exportTitle">导出收藏文献</h3>
-      </div>
-      <button class="btn icon-btn" id="closeExport" type="button" aria-label="关闭">✕</button>
-    </div>
-    <p class="muted" id="exportCount"></p>
-    <textarea id="exportText" readonly spellcheck="false" aria-label="导出内容"></textarea>
-    <div class="modal-foot">
-      <div class="chip-group segmented compact" role="group" aria-label="导出格式">
-        <button class="chip active" data-fmt="bibtex">BibTeX</button>
-        <button class="chip" data-fmt="markdown">Markdown</button>
-        <button class="chip" data-fmt="csv">CSV</button>
-        <button class="chip" data-fmt="apa">参考文献</button>
-      </div>
-      <div class="chip-group">
-        <button class="btn" id="copyExport">复制</button>
-        <button class="btn primary" id="downloadExport">下载文件</button>
-      </div>
+      <div class="sheet-meta" id="detailMeta"></div>
+      <p class="sheet-abstract" id="detailAbstract"></p>
+      <div class="sheet-actions" id="detailActions"></div>
     </div>
   </div>
-</div>
 
-<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
-<script src="data/data.js"></script>
-<script src="data/demo.js"></script>
-<script src="assets/app.js"></script>
+  <script src="data/data.js"></script>
+  <script src="data/demo.js"></script>
+  <script src="assets/app.js"></script>
 </body>
 </html>

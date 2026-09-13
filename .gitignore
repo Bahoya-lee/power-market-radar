@@ -15,6 +15,7 @@ logs/
 
 # SQLite journal files
 data/library.db
+data/translations.json
 *.db-journal
 *.db-wal
 *.db-shm
