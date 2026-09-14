@@ -1,18 +1,13 @@
 {
-  "updated_at": "2026-09-13 05:11",
-  "updated_date": "2026-09-13",
-  "generated_ts": 1789276272443,
+  "updated_at": "2026-09-14 05:18",
+  "updated_date": "2026-09-14",
+  "generated_ts": 1789363118060,
   "source_count": 2,
   "errors": [
     {
       "topic": "spot_market",
-      "source": "openalex",
-      "error": "获取失败（重试 3 次）：https://api.openalex.org/works?filter=title_and_abstract.search%3A%22electricity%20spot%20market%22%7C%22electricity%20market%20clearing%22% —— HTTP Error 429: Too Many Requests"
-    },
-    {
-      "topic": "spot_market",
       "source": "arxiv",
-      "error": "获取失败（重试 3 次）：http://export.arxiv.org/api/query?search_query=%28abs%3A%22electricity%20spot%20market%22%20OR%20abs%3A%22electricity%20market%20clearing%22 —— HTTP Error 429: Unknown Error"
+      "error": "获取失败（重试 3 次）：http://export.arxiv.org/api/query?search_query=%28abs%3A%22electricity%20spot%20market%22%20OR%20abs%3A%22electricity%20market%20clearing%22 —— HTTP Error 429: Too Many Requests"
     },
     {
       "topic": "price_forecast",
@@ -20,15 +15,15 @@
       "error": "获取失败（重试 3 次）：http://export.arxiv.org/api/query?search_query=%28abs%3A%22electricity%20price%20forecasting%22%20OR%20abs%3A%22electricity%20price%20predic —— HTTP Error 429: Unknown Error"
     }
   ],
-  "error_count": 3,
+  "error_count": 2,
   "source_status": [
     {
       "id": "openalex",
       "name": "OpenAlex",
       "enabled": true,
-      "status": "failed",
-      "fetched": 560,
-      "errors": 1
+      "status": "ok",
+      "fetched": 630,
+      "errors": 0
     },
     {
       "id": "arxiv",
@@ -56,18 +51,18 @@
     }
   ],
   "stats": {
-    "started": "2026-09-13T05:08:00",
-    "finished": "2026-09-13T05:11:12",
-    "elapsed_sec": 191.5,
+    "started": "2026-09-14T05:15:27",
+    "finished": "2026-09-14T05:18:36",
+    "elapsed_sec": 189.2,
     "topics": 18,
     "source_status": [
       {
         "id": "openalex",
         "name": "OpenAlex",
         "enabled": true,
-        "status": "failed",
-        "fetched": 560,
-        "errors": 1
+        "status": "ok",
+        "fetched": 630,
+        "errors": 0
       },
       {
         "id": "arxiv",
@@ -95,8 +90,8 @@
       }
     ]
   },
-  "total": 712,
-  "recent30": 115,
-  "new_today": 0,
-  "oa": 529
+  "total": 719,
+  "recent30": 120,
+  "new_today": 7,
+  "oa": 535
 }
