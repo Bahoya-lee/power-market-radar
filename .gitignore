@@ -8,6 +8,7 @@ env/
 
 # Local runtime files
 _daily_update.bat
+diagnose_push.ps1
 _selftest_tmp/
 _preview/
 logs/
