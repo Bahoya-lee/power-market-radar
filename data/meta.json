@@ -1,18 +1,18 @@
 {
-  "updated_at": "2026-09-14 22:25",
-  "updated_date": "2026-09-14",
-  "generated_ts": 1789395929392,
-  "source_count": 1,
+  "updated_at": "2026-09-15 05:11",
+  "updated_date": "2026-09-15",
+  "generated_ts": 1789449073952,
+  "source_count": 2,
   "errors": [
     {
       "topic": "spot_market",
       "source": "arxiv",
-      "error": "获取失败（重试 3 次）：http://export.arxiv.org/api/query?search_query=%28abs%3A%22electricity%20spot%20market%22%20OR%20abs%3A%22electricity%20market%20clearing%22 —— ('Connection aborted.', ConnectionResetError(10054, '远程主机强迫关闭了一个现有的连接。', None, 10054, None))"
+      "error": "获取失败（重试 3 次）：http://export.arxiv.org/api/query?search_query=%28abs%3A%22electricity%20spot%20market%22%20OR%20abs%3A%22electricity%20market%20clearing%22 —— HTTP Error 429: Unknown Error"
     },
     {
       "topic": "price_forecast",
       "source": "arxiv",
-      "error": "获取失败（重试 3 次）：http://export.arxiv.org/api/query?search_query=%28abs%3A%22electricity%20price%20forecasting%22%20OR%20abs%3A%22electricity%20price%20predic —— ('Connection aborted.', ConnectionResetError(10054, '远程主机强迫关闭了一个现有的连接。', None, 10054, None))"
+      "error": "获取失败（重试 3 次）：http://export.arxiv.org/api/query?search_query=%28abs%3A%22electricity%20price%20forecasting%22%20OR%20abs%3A%22electricity%20price%20predic —— HTTP Error 429: Unknown Error"
     }
   ],
   "error_count": 2,
@@ -51,9 +51,9 @@
     }
   ],
   "stats": {
-    "started": "2026-09-14T22:17:35",
-    "finished": "2026-09-14T22:24:53",
-    "elapsed_sec": 437.9,
+    "started": "2026-09-15T05:07:20",
+    "finished": "2026-09-15T05:11:12",
+    "elapsed_sec": 232.5,
     "topics": 18,
     "source_status": [
       {
@@ -90,8 +90,8 @@
       }
     ]
   },
-  "total": 570,
+  "total": 721,
   "recent30": 120,
-  "new_today": 9,
-  "oa": 386
+  "new_today": 2,
+  "oa": 537
 }
