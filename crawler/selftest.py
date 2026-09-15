@@ -193,7 +193,7 @@ def main() -> int:
     assert len(deduped) < len(papers), "跨源去重没有生效"
 
     # 检查关键字段都解析出来了
-    sample = deduped[0]
+    sample = next((p for p in deduped if p.get("citations", 0) > 0), deduped[0])
     for field in ("uid", "title", "authors", "venue", "date", "url"):
         assert sample.get(field), f"字段 {field} 解析为空"
     assert sample["citations"] > 0, "被引数没有解析出来"

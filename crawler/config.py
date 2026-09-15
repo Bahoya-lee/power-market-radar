@@ -24,6 +24,15 @@ HTTP_RETRIES = 3           # 失败重试次数
 HTTP_BACKOFF = 2.5         # 重试退避基数（秒）
 REQUEST_INTERVAL = 1.2     # 同一数据源两次请求之间的间隔（秒），避免触发限流
 
+# 并发抓取：主题级和单个主题内的数据源级并行度。
+# 过大会触发 OpenAlex / Crossref 限流，过小又拖慢整次更新。
+MAX_TOPIC_WORKERS = 3
+MAX_SOURCE_WORKERS = 2
+
+# arXiv 直连在国内网络下经常被重置，这里缩短等待并快速切换到 OpenAlex 预印本兜底。
+ARXIV_TIMEOUT = 12
+ARXIV_RETRIES = 1
+
 # 某个数据源连续失败多少个主题后暂时跳过。
 # 这样 arXiv 等站点被网络环境阻断时，不会让整次更新久等。
 SOURCE_FAILURE_LIMIT = 2

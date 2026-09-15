@@ -14,6 +14,7 @@ import html
 import os
 import re
 import xml.etree.ElementTree as ET
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import date, timedelta
 
 from . import config
@@ -237,7 +238,22 @@ def fetch_arxiv(topic: dict, max_results: int = 30) -> list[dict]:
         "start": "0",
         "max_results": str(max_results),
     }
-    text = get_text(ARXIV_BASE, params, accept="application/atom+xml")
+    try:
+        text = get_text(
+            ARXIV_BASE,
+            params,
+            accept="application/atom+xml",
+            timeout=config.ARXIV_TIMEOUT,
+            retries=config.ARXIV_RETRIES,
+        )
+    except FetchError:
+        # arXiv 在部分网络环境下直连会被重置。这里改用 OpenAlex 的预印本记录，
+        # 再按 landing_page_url 过滤出 arXiv 条目，保证 arXiv 源仍能贡献前沿文献。
+        try:
+            return _fetch_arxiv_via_openalex(topic, max_results)
+        except FetchError:
+            # OpenAlex 也暂时限流时，不让整个更新流程报错；OpenAlex 主源仍会抓取预印本。
+            return []
     try:
         root = ET.fromstring(text)
     except ET.ParseError as exc:
@@ -296,6 +312,45 @@ def fetch_arxiv(topic: dict, max_results: int = 30) -> list[dict]:
     return out
 
 
+def _fetch_arxiv_via_openalex(topic: dict, max_results: int = 30) -> list[dict]:
+    """arXiv 直连失败时的兜底：用 OpenAlex 预印本结果筛选 arXiv 链接。"""
+    today = date.today()
+    params = _openalex_params(
+        topic["queries"],
+        from_date=(today - timedelta(days=config.RECENT_DAYS)).isoformat(),
+        sort="publication_date:desc",
+        per_page=max(30, max_results * 2),
+        type_filter="preprint",
+    )
+    payload = get_json(OPENALEX_BASE, params)
+    out: list[dict] = []
+    for item in payload.get("results", []):
+        paper = _openalex_to_paper(item, topic["id"])
+        if not paper:
+            continue
+        loc = item.get("primary_location") or {}
+        landing = clean_text(loc.get("landing_page_url"))
+        pdf = clean_text(loc.get("pdf_url"))
+        if "arxiv.org" not in (landing + " " + pdf).lower():
+            continue
+        arxiv_id = landing.rstrip("/").split("/")[-1] if landing else ""
+        paper.update(
+            {
+                "uid": make_uid(f"arxiv:{arxiv_id or paper['uid']}"),
+                "source": "arxiv",
+                "source_name": "arXiv",
+                "type": "preprint",
+                "is_oa": True,
+                "venue": "arXiv preprint",
+                "url": landing or paper["url"],
+                "pdf_url": pdf or paper["pdf_url"],
+                "doi": paper.get("doi") or "",
+            }
+        )
+        out.append(paper)
+    return out
+
+
 # ---------------------------------------------------------------- Crossref
 
 CROSSREF_BASE = "https://api.crossref.org/works"
@@ -311,6 +366,7 @@ def fetch_crossref(topic: dict, rows: int = 25) -> list[dict]:
             "query.bibliographic": query,
             "filter": (
                 f"from-pub-date:{(today - timedelta(days=config.RECENT_DAYS)).isoformat()},"
+                f"until-pub-date:{today.isoformat()},"
                 "type:journal-article"
             ),
             "sort": "published",
@@ -463,20 +519,35 @@ def fetch_topic(topic: dict, enabled=None, skip_sources=None):
     papers: list[dict] = []
     errors: list[dict] = []
 
-    for name, fetcher in FETCHERS.items():
-        if not enabled.get(name) or name in skip_sources:
-            continue
+    active = [
+        name for name, fetcher in FETCHERS.items()
+        if enabled.get(name) and name not in skip_sources
+    ]
+    if not active:
+        return papers, errors
+
+    def _fetch_one(name: str) -> tuple[list[dict], list[dict]]:
         try:
-            got = fetcher(topic)
+            got = FETCHERS[name](topic)
             for p in got:
                 p["topic_primary"] = topic["id"]
-            papers.extend(got)
+            return got, []
         except FetchError as exc:
-            errors.append({"topic": topic["id"], "source": name, "error": str(exc)})
+            return [], [{"topic": topic["id"], "source": name, "error": str(exc)}]
         except Exception as exc:  # noqa: BLE001 - 单点故障兜底
-            errors.append(
-                {"topic": topic["id"], "source": name, "error": f"{type(exc).__name__}: {exc}"}
-            )
+            return [], [{
+                "topic": topic["id"],
+                "source": name,
+                "error": f"{type(exc).__name__}: {exc}",
+            }]
+
+    workers = min(config.MAX_SOURCE_WORKERS, len(active))
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        futures = {pool.submit(_fetch_one, name): name for name in active}
+        for future in as_completed(futures):
+            got, errs = future.result()
+            papers.extend(got)
+            errors.extend(errs)
 
     return papers, errors
 

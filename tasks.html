@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0e1518">
+  <title>每日任务管理 · 电力市场前沿追踪</title>
+  <style>
+    :root{
+      --bg:#0e1518;--card:#151f24;--line:#22343a;--ink:#eef6f3;--muted:#93a5ab;
+      --brand:#2f9c7f;--brand-soft:#17372a;--danger:#ff7b7b;--warn:#f2b45c;--blue:#5aa9ff;
+    }
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.5}
+    .wrap{max-width:880px;margin:0 auto;padding:24px 16px 60px}
+    header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
+    h1{font-size:24px;margin:0}
+    .sub{color:var(--muted);font-size:13px;margin-top:4px}
+    a{color:var(--blue);text-decoration:none}
+    .banner{padding:12px 14px;border-radius:14px;font-size:13px;margin-bottom:14px;background:#332913;border:1px solid #564522;color:#f0d395}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:0 14px 32px rgba(0,0,0,.18)}
+    .card h2{margin:0 0 12px;font-size:17px}
+    .card h3{margin:0 0 8px;font-size:14px}
+    .status-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:700}
+    .status-pill.on{background:#17372a;color:#7fe0b5}
+    .status-pill.off{background:#2a3136;color:#b9c3c7}
+    .status-pill.bad{background:#3b1c1f;color:#ff9b9b}
+    .kv{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px}
+    .kv:last-child{border-bottom:0}
+    .kv b{font-weight:600}
+    .kv span{color:var(--muted);text-align:right}
+    label{display:block;font-size:13px;color:var(--muted);margin:10px 0 5px}
+    input,select,textarea{width:100%;padding:10px 11px;border:1px solid var(--line);border-radius:12px;background:#0f171b;color:var(--ink);outline:none;font-size:14px}
+    textarea{min-height:150px;font-family:ui-monospace,Consolas,monospace;font-size:12px;white-space:pre-wrap}
+    button{border:0;border-radius:12px;padding:10px 14px;font-size:14px;font-weight:600;cursor:pointer;background:var(--brand);color:#fff}
+    button.ghost{background:#223036;color:var(--ink)}
+    button.danger{background:var(--danger)}
+    button.blue{background:#20528a}
+    button:active{transform:scale(.98)}
+    button:disabled{opacity:.5;cursor:not-allowed}
+    .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+    .source{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px}
+    .source:last-child{border-bottom:0}
+    .source-name{font-weight:600}
+    .source-num{color:var(--muted);font-size:12px}
+    .muted{color:var(--muted);font-size:12px}
+    .spinner{display:none;margin-top:10px;color:var(--muted);font-size:13px}
+    @media(max-width:720px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>每日任务管理</h1>
+        <div class="sub">注册、查看和取消本地每日更新；也可以立即执行一次抓取与推送。</div>
+      </div>
+      <a href="index.html">返回研究页</a>
+    </header>
+
+    <div class="banner hidden" id="fileBanner">
+      当前页面没有连接本地任务管理服务，无法直接修改系统任务。请双击项目里的 <b>打开任务管理.bat</b>，页面会通过本地服务读取任务状态并提供注册/取消功能。
+    </div>
+
+    <div class="grid">
+      <section class="card">
+        <h2>已设定任务</h2>
+        <div class="kv"><b>状态</b><span id="taskState">读取中…</span></div>
+        <div class="kv"><b>任务名称</b><span id="taskName">PowerMarketRadar-Daily</span></div>
+        <div class="kv"><b>每日执行时间</b><span id="taskTime">--</span></div>
+        <div class="kv"><b>执行动作</b><span id="taskAction">--</span></div>
+        <div class="kv"><b>下次运行</b><span id="nextRun">--</span></div>
+        <div class="kv"><b>上次结果</b><span id="lastResult">--</span></div>
+        <div class="actions">
+          <button class="blue" id="refreshBtn" type="button">刷新状态</button>
+          <button class="ghost" id="runBtn" type="button">立即更新</button>
+          <button class="ghost" id="pushBtn" type="button">立即更新并推送</button>
+          <button class="danger" id="removeBtn" type="button">取消任务</button>
+        </div>
+        <div class="spinner" id="spinner">正在执行，请稍候…</div>
+      </section>
+
+      <section class="card">
+        <h2>注册每日任务</h2>
+        <label>执行时间</label>
+        <input type="time" id="taskTimeInput" value="08:30">
+        <label style="display:flex;align-items:center;gap:8px">
+          <input type="checkbox" id="pushCheckbox" style="width:auto;margin:0"> 每日抓取后同步推送到 GitHub
+        </label>
+        <div class="actions">
+          <button id="installBtn" type="button">注册 / 更新任务</button>
+        </div>
+        <p class="muted">本机任务只在电脑开机且已登录时运行。若使用 GitHub Actions 云端更新，本机任务不是必须的。</p>
+      </section>
+    </div>
+
+    <section class="card" style="margin-top:14px">
+      <h2>数据源状态</h2>
+      <div id="sourceList"><div class="muted">读取中…</div></div>
+      <div class="muted" id="sourceUpdated" style="margin-top:8px"></div>
+    </section>
+
+    <section class="card" style="margin-top:14px">
+      <h2>最近日志</h2>
+      <div class="actions">
+        <button class="ghost" id="logRefreshBtn" type="button">刷新日志</button>
+      </div>
+      <textarea id="logBox" readonly placeholder="暂无日志"></textarea>
+    </section>
+  </div>
+
+  <script>
+  (function(){
+    "use strict";
+    var isFile = location.protocol === "file:";
+    var isLocal = location.hostname === "127.0.0.1" || location.hostname === "localhost";
+    var needsServer = isFile || !isLocal;
+    var $ = function(id){ return document.getElementById(id); };
+
+    function showBanner(){
+      $("fileBanner").classList.toggle("hidden", !needsServer);
+      ["installBtn","removeBtn","runBtn","pushBtn","refreshBtn","logRefreshBtn"].forEach(function(id){
+        $(id).disabled = needsServer;
+      });
+    }
+
+    function esc(s){ return String(s==null?"":s); }
+
+    function sourceBadge(status){
+      if(status === "ok") return '<span class="status-pill on">正常</span>';
+      if(status === "empty") return '<span class="status-pill off">无新增</span>';
+      if(status === "disabled") return '<span class="status-pill off">已关闭</span>';
+      return '<span class="status-pill bad">失败</span>';
+    }
+
+    function renderStatus(data){
+      var t = data.task || {};
+      $("taskState").innerHTML = t.installed ? '<span class="status-pill on">已注册</span>' : '<span class="status-pill off">未注册</span>';
+      $("taskName").textContent = t.task_name || "PowerMarketRadar-Daily";
+      $("taskTime").textContent = t.time || "未设定";
+      $("taskAction").textContent = t.push ? "抓取并推送 GitHub" : "仅抓取并刷新本地网站";
+      $("nextRun").textContent = t.next_run || "--";
+      $("lastResult").textContent = t.last_result || "--";
+
+      var sources = data.sources || [];
+      $("sourceList").innerHTML = sources.length ? sources.map(function(s){
+        return '<div class="source"><span class="source-name">' + esc(s.name) + '</span>' +
+          '<div style="display:flex;align-items:center;gap:8px">' +
+          '<span class="source-num">抓到 ' + (s.fetched || 0) + ' · 错误 ' + (s.errors || 0) + '</span>' +
+          sourceBadge(s.status) + '</div></div>';
+      }).join("") : '<div class="muted">暂无数据源状态。运行一次更新后会自动生成。</div>';
+      $("sourceUpdated").textContent = data.updated_at ? "最后更新：" + data.updated_at : "";
+    }
+
+    function loadStatus(){
+      if(needsServer){
+        renderStatus({task:{},sources:[]});
+        return;
+      }
+      fetch("/api/status").then(function(r){ return r.json(); }).then(renderStatus).catch(function(e){
+        $("taskState").textContent = "读取失败";
+        $("sourceList").innerHTML = '<div class="muted">' + esc(e.message) + '</div>';
+      });
+    }
+
+    function loadLog(){
+      if(needsServer) return;
+      fetch("/api/log?lines=120").then(function(r){ return r.json(); }).then(function(d){
+        $("logBox").value = d.log || "";
+      }).catch(function(){});
+    }
+
+    function setBusy(on){
+      $("spinner").style.display = on ? "block" : "none";
+      ["installBtn","removeBtn","runBtn","pushBtn"].forEach(function(id){ $(id).disabled = on; });
+    }
+
+    function post(path, body){
+      if(needsServer){
+        alert("请双击「打开任务管理.bat」启动本地任务管理服务。");
+        return Promise.resolve(null);
+      }
+      setBusy(true);
+      return fetch(path, {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify(body || {})
+      }).then(function(r){ return r.json(); }).then(function(d){
+        setBusy(false);
+        if(d && d.output) $("logBox").value = d.output;
+        loadStatus();
+        loadLog();
+        return d;
+      }).catch(function(e){
+        setBusy(false);
+        $("logBox").value = "请求失败：" + e.message;
+      });
+    }
+
+    $("refreshBtn").addEventListener("click", function(){ loadStatus(); loadLog(); });
+    $("logRefreshBtn").addEventListener("click", loadLog);
+    $("installBtn").addEventListener("click", function(){
+      var time = $("taskTimeInput").value || "08:30";
+      post("/api/install", {time:time, push:$("pushCheckbox").checked});
+    });
+    $("removeBtn").addEventListener("click", function(){
+      if(!confirm("确定取消本机每日更新任务？")) return;
+      post("/api/remove");
+    });
+    $("runBtn").addEventListener("click", function(){
+      if(!confirm("立即执行一次本地抓取？可能需要几分钟。")) return;
+      post("/api/update", {push:false});
+    });
+    $("pushBtn").addEventListener("click", function(){
+      if(!confirm("立即抓取并推送 GitHub？可能需要几分钟，并会执行 Git 提交。")) return;
+      post("/api/update", {push:true});
+    });
+
+    showBanner();
+    loadStatus();
+    loadLog();
+  })();
+  </script>
+</body>
+</html>

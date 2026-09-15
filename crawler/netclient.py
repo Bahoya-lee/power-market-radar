@@ -14,6 +14,7 @@ import json
 import os
 import random
 import socket
+import threading
 import time
 import urllib.error
 import urllib.parse
@@ -36,6 +37,7 @@ class FetchError(RuntimeError):
 
 
 _last_request_at: dict[str, float] = {}
+_throttle_lock = threading.Lock()
 
 
 def _proxy_config() -> dict[str, str] | None:
@@ -80,12 +82,13 @@ def _urllib_opener():
 
 def _throttle(host: str) -> None:
     """同一主机两次请求之间保持最小间隔，做一个有礼貌的爬虫。"""
-    now = time.time()
-    last = _last_request_at.get(host, 0.0)
-    wait = config.REQUEST_INTERVAL - (now - last)
-    if wait > 0:
-        time.sleep(wait)
-    _last_request_at[host] = time.time()
+    with _throttle_lock:
+        now = time.time()
+        last = _last_request_at.get(host, 0.0)
+        wait = config.REQUEST_INTERVAL - (now - last)
+        if wait > 0:
+            time.sleep(wait)
+        _last_request_at[host] = time.time()
 
 
 def _decode_body(raw: bytes, encoding) -> str:
@@ -171,6 +174,8 @@ def get_text(
 
         if attempt < retries:
             delay = config.HTTP_BACKOFF * (2 ** (attempt - 1)) + random.uniform(0, 1)
+            if last_err and "429" in str(last_err):
+                delay = max(delay, 15 * attempt)
             time.sleep(delay)
 
     raise FetchError(f"获取失败（重试 {retries} 次）：{url[:140]} —— {last_err}")

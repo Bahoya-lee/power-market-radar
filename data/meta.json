@@ -1,21 +1,10 @@
 {
-  "updated_at": "2026-09-15 05:11",
+  "updated_at": "2026-09-15 16:47",
   "updated_date": "2026-09-15",
-  "generated_ts": 1789449073952,
-  "source_count": 2,
-  "errors": [
-    {
-      "topic": "spot_market",
-      "source": "arxiv",
-      "error": "获取失败（重试 3 次）：http://export.arxiv.org/api/query?search_query=%28abs%3A%22electricity%20spot%20market%22%20OR%20abs%3A%22electricity%20market%20clearing%22 —— HTTP Error 429: Unknown Error"
-    },
-    {
-      "topic": "price_forecast",
-      "source": "arxiv",
-      "error": "获取失败（重试 3 次）：http://export.arxiv.org/api/query?search_query=%28abs%3A%22electricity%20price%20forecasting%22%20OR%20abs%3A%22electricity%20price%20predic —— HTTP Error 429: Unknown Error"
-    }
-  ],
-  "error_count": 2,
+  "generated_ts": 1789462078751,
+  "source_count": 3,
+  "errors": [],
+  "error_count": 0,
   "source_status": [
     {
       "id": "openalex",
@@ -29,16 +18,16 @@
       "id": "arxiv",
       "name": "arXiv",
       "enabled": true,
-      "status": "failed",
-      "fetched": 0,
-      "errors": 2
+      "status": "ok",
+      "fetched": 96,
+      "errors": 0
     },
     {
       "id": "crossref",
       "name": "Crossref",
       "enabled": true,
-      "status": "empty",
-      "fetched": 0,
+      "status": "ok",
+      "fetched": 900,
       "errors": 0
     },
     {
@@ -51,9 +40,9 @@
     }
   ],
   "stats": {
-    "started": "2026-09-15T05:07:20",
-    "finished": "2026-09-15T05:11:12",
-    "elapsed_sec": 232.5,
+    "started": "2026-09-15T16:45:20",
+    "finished": "2026-09-15T16:47:22",
+    "elapsed_sec": 122.2,
     "topics": 18,
     "source_status": [
       {
@@ -68,16 +57,16 @@
         "id": "arxiv",
         "name": "arXiv",
         "enabled": true,
-        "status": "failed",
-        "fetched": 0,
-        "errors": 2
+        "status": "ok",
+        "fetched": 96,
+        "errors": 0
       },
       {
         "id": "crossref",
         "name": "Crossref",
         "enabled": true,
-        "status": "empty",
-        "fetched": 0,
+        "status": "ok",
+        "fetched": 900,
         "errors": 0
       },
       {
@@ -90,8 +79,8 @@
       }
     ]
   },
-  "total": 721,
-  "recent30": 120,
-  "new_today": 2,
-  "oa": 537
+  "total": 1067,
+  "recent30": 530,
+  "new_today": 468,
+  "oa": 483
 }

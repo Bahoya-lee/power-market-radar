@@ -15,6 +15,7 @@ import argparse
 import sys
 import traceback
 from collections import Counter
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from pathlib import Path
 
@@ -145,31 +146,25 @@ def main(argv=None) -> int:
         say()
 
         source_failures: Counter[str] = Counter()
-        blocked_sources: set[str] = set()
-        for i, topic in enumerate(topics, 1):
-            newly_blocked: set[str] = set()
-            progress(i - 1, len(topics), topic["zh"])
-            got, errs = sources.fetch_topic(
-                topic, config.SOURCES, skip_sources=blocked_sources
-            )
-            fetched.extend(got)
-            errors.extend(errs)
-            for err in errs:
-                name = err.get("source") or ""
-                source_failures[name] += 1
-                if (
-                    name
-                    and name not in blocked_sources
-                    and source_failures[name] >= config.SOURCE_FAILURE_LIMIT
-                ):
-                    blocked_sources.add(name)
-                    newly_blocked.add(name)
-            progress(i, len(topics), topic["zh"])
-            print()
+        workers = min(config.MAX_TOPIC_WORKERS, len(topics))
+        with ThreadPoolExecutor(max_workers=workers) as pool:
+            futures = {
+                pool.submit(sources.fetch_topic, topic, config.SOURCES, set()): topic
+                for topic in topics
+            }
+            done = 0
+            for future in as_completed(futures):
+                topic = futures[future]
+                done += 1
+                got, errs = future.result()
+                fetched.extend(got)
+                errors.extend(errs)
+                for err in errs:
+                    name = err.get("source") or ""
+                    source_failures[name] += 1
+                progress(done, len(topics), topic["zh"])
 
-            if newly_blocked:
-                names = "、".join(sorted(newly_blocked))
-                print(f"  ! 连续失败的数据源已暂时跳过：{names}", C.YELLOW)
+        print()
 
         source_counts = Counter(p.get("source") or "" for p in fetched)
         raw_count = len(fetched)
