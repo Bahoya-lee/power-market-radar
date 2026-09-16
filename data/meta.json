@@ -1,81 +1,25 @@
 {
-  "updated_at": "2026-09-15 17:29",
-  "updated_date": "2026-09-15",
-  "generated_ts": 1789464558112,
+  "updated_at": "2026-09-16 05:04",
+  "updated_date": "2026-09-16",
+  "generated_ts": 1789535066598,
   "source_count": 3,
-  "errors": [
-    {
-      "topic": "vpp",
-      "source": "openalex",
-      "error": "获取失败（重试 3 次）：https://api.openalex.org/works?filter=title_and_abstract.search%3A%22virtual%20power%20plant%22%7C%22aggregator%20electricity%20market%22%7C —— HTTP 429 https://api.openalex.org/works?filter=title_and_abstract.search%3A%22virtual%20power%20plant%22%7C%22aggregator%20electr"
-    },
-    {
-      "topic": "p2p",
-      "source": "openalex",
-      "error": "获取失败（重试 3 次）：https://api.openalex.org/works?filter=title_and_abstract.search%3A%22peer-to-peer%20energy%20trading%22%7C%22transactive%20energy%22%7C%22co —— HTTP 429 https://api.openalex.org/works?filter=title_and_abstract.search%3A%22peer-to-peer%20energy%20trading%22%7C%22transactive"
-    },
-    {
-      "topic": "storage",
-      "source": "openalex",
-      "error": "获取失败（重试 3 次）：https://api.openalex.org/works?filter=title_and_abstract.search%3A%22energy%20storage%20electricity%20market%20participation%22%7C%22battery —— HTTP 429 https://api.openalex.org/works?filter=title_and_abstract.search%3A%22energy%20storage%20electricity%20market%20participa"
-    },
-    {
-      "topic": "ev",
-      "source": "openalex",
-      "error": "获取失败（重试 3 次）：https://api.openalex.org/works?filter=title_and_abstract.search%3A%22electric%20vehicle%20charging%20electricity%20market%22%7C%22electric%2 —— HTTP 429 https://api.openalex.org/works?filter=title_and_abstract.search%3A%22electric%20vehicle%20charging%20electricity%20marke"
-    },
-    {
-      "topic": "bidding",
-      "source": "openalex",
-      "error": "获取失败（重试 3 次）：https://api.openalex.org/works?filter=title_and_abstract.search%3A%22bidding%20strategy%20electricity%20market%22%7C%22market%20power%20elec —— HTTP 429 https://api.openalex.org/works?filter=title_and_abstract.search%3A%22bidding%20strategy%20electricity%20market%22%7C%22m"
-    },
-    {
-      "topic": "retail",
-      "source": "openalex",
-      "error": "获取失败（重试 3 次）：https://api.openalex.org/works?filter=title_and_abstract.search%3A%22electricity%20retail%20market%22%7C%22electricity%20retailer%20pricing% —— HTTP 429 https://api.openalex.org/works?filter=title_and_abstract.search%3A%22electricity%20retail%20market%22%7C%22electricity%2"
-    },
-    {
-      "topic": "ai",
-      "source": "openalex",
-      "error": "获取失败（重试 3 次）：https://api.openalex.org/works?filter=title_and_abstract.search%3A%22machine%20learning%20electricity%20market%22%7C%22deep%20learning%20pow —— HTTP 429 https://api.openalex.org/works?filter=title_and_abstract.search%3A%22machine%20learning%20electricity%20market%22%7C%22d"
-    },
-    {
-      "topic": "uncertainty",
-      "source": "openalex",
-      "error": "获取失败（重试 3 次）：https://api.openalex.org/works?filter=title_and_abstract.search%3A%22uncertainty%20electricity%20market%22%7C%22stochastic%20optimization%20 —— HTTP 429 https://api.openalex.org/works?filter=title_and_abstract.search%3A%22uncertainty%20electricity%20market%22%7C%22stochast"
-    },
-    {
-      "topic": "integrated",
-      "source": "openalex",
-      "error": "获取失败（重试 3 次）：https://api.openalex.org/works?filter=title_and_abstract.search%3A%22integrated%20energy%20system%20market%22%7C%22multi-energy%20market%20c —— HTTP 429 https://api.openalex.org/works?filter=title_and_abstract.search%3A%22integrated%20energy%20system%20market%22%7C%22multi"
-    },
-    {
-      "topic": "congestion",
-      "source": "openalex",
-      "error": "获取失败（重试 3 次）：https://api.openalex.org/works?filter=title_and_abstract.search%3A%22congestion%20management%20electricity%20market%22%7C%22financial%20tran —— HTTP 429 https://api.openalex.org/works?filter=title_and_abstract.search%3A%22congestion%20management%20electricity%20market%22%7"
-    },
-    {
-      "topic": "policy",
-      "source": "openalex",
-      "error": "获取失败（重试 3 次）：https://api.openalex.org/works?filter=title_and_abstract.search%3A%22electricity%20market%20design%22%7C%22power%20market%20reform%22%7C%22e —— HTTP 429 https://api.openalex.org/works?filter=title_and_abstract.search%3A%22electricity%20market%20design%22%7C%22power%20marke"
-    }
-  ],
-  "error_count": 11,
+  "errors": [],
+  "error_count": 0,
   "source_status": [
     {
       "id": "openalex",
       "name": "OpenAlex",
       "enabled": true,
-      "status": "failed",
-      "fetched": 293,
-      "errors": 11
+      "status": "ok",
+      "fetched": 630,
+      "errors": 0
     },
     {
       "id": "arxiv",
       "name": "arXiv",
       "enabled": true,
       "status": "ok",
-      "fetched": 60,
+      "fetched": 184,
       "errors": 0
     },
     {
@@ -96,25 +40,25 @@
     }
   ],
   "stats": {
-    "started": "2026-09-15T17:24:11",
-    "finished": "2026-09-15T17:28:41",
-    "elapsed_sec": 270.9,
+    "started": "2026-09-16T05:03:13",
+    "finished": "2026-09-16T05:04:25",
+    "elapsed_sec": 72.4,
     "topics": 18,
     "source_status": [
       {
         "id": "openalex",
         "name": "OpenAlex",
         "enabled": true,
-        "status": "failed",
-        "fetched": 293,
-        "errors": 11
+        "status": "ok",
+        "fetched": 630,
+        "errors": 0
       },
       {
         "id": "arxiv",
         "name": "arXiv",
         "enabled": true,
         "status": "ok",
-        "fetched": 60,
+        "fetched": 184,
         "errors": 0
       },
       {
@@ -135,8 +79,8 @@
       }
     ]
   },
-  "total": 1088,
-  "recent30": 551,
-  "new_today": 21,
-  "oa": 483
+  "total": 1186,
+  "recent30": 562,
+  "new_today": 465,
+  "oa": 571
 }
