@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-09-16 05:04",
-  "updated_date": "2026-09-16",
-  "generated_ts": 1789535066598,
+  "updated_at": "2026-09-17 05:07",
+  "updated_date": "2026-09-17",
+  "generated_ts": 1789621623639,
   "source_count": 3,
   "errors": [],
   "error_count": 0,
@@ -11,7 +11,7 @@
       "name": "OpenAlex",
       "enabled": true,
       "status": "ok",
-      "fetched": 630,
+      "fetched": 631,
       "errors": 0
     },
     {
@@ -19,7 +19,7 @@
       "name": "arXiv",
       "enabled": true,
       "status": "ok",
-      "fetched": 184,
+      "fetched": 96,
       "errors": 0
     },
     {
@@ -40,9 +40,9 @@
     }
   ],
   "stats": {
-    "started": "2026-09-16T05:03:13",
-    "finished": "2026-09-16T05:04:25",
-    "elapsed_sec": 72.4,
+    "started": "2026-09-17T05:05:29",
+    "finished": "2026-09-17T05:07:02",
+    "elapsed_sec": 93.3,
     "topics": 18,
     "source_status": [
       {
@@ -50,7 +50,7 @@
         "name": "OpenAlex",
         "enabled": true,
         "status": "ok",
-        "fetched": 630,
+        "fetched": 631,
         "errors": 0
       },
       {
@@ -58,7 +58,7 @@
         "name": "arXiv",
         "enabled": true,
         "status": "ok",
-        "fetched": 184,
+        "fetched": 96,
         "errors": 0
       },
       {
@@ -79,8 +79,8 @@
       }
     ]
   },
-  "total": 1186,
-  "recent30": 562,
-  "new_today": 465,
-  "oa": 571
+  "total": 1685,
+  "recent30": 971,
+  "new_today": 499,
+  "oa": 673
 }
