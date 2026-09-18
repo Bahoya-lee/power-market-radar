@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-09-17 05:07",
-  "updated_date": "2026-09-17",
-  "generated_ts": 1789621623639,
+  "updated_at": "2026-09-18 04:59",
+  "updated_date": "2026-09-18",
+  "generated_ts": 1789707584812,
   "source_count": 3,
   "errors": [],
   "error_count": 0,
@@ -19,7 +19,7 @@
       "name": "arXiv",
       "enabled": true,
       "status": "ok",
-      "fetched": 96,
+      "fetched": 97,
       "errors": 0
     },
     {
@@ -40,9 +40,9 @@
     }
   ],
   "stats": {
-    "started": "2026-09-17T05:05:29",
-    "finished": "2026-09-17T05:07:02",
-    "elapsed_sec": 93.3,
+    "started": "2026-09-18T04:58:13",
+    "finished": "2026-09-18T04:59:43",
+    "elapsed_sec": 90.3,
     "topics": 18,
     "source_status": [
       {
@@ -58,7 +58,7 @@
         "name": "arXiv",
         "enabled": true,
         "status": "ok",
-        "fetched": 96,
+        "fetched": 97,
         "errors": 0
       },
       {
@@ -79,8 +79,8 @@
       }
     ]
   },
-  "total": 1685,
-  "recent30": 971,
-  "new_today": 499,
-  "oa": 673
+  "total": 2000,
+  "recent30": 1303,
+  "new_today": 336,
+  "oa": 659
 }
