@@ -38,6 +38,37 @@ class FetchError(RuntimeError):
 
 _last_request_at: dict[str, float] = {}
 _throttle_lock = threading.Lock()
+_thread_local = threading.local()
+
+
+def _session():
+    """每个线程一个 requests.Session：复用 TCP/TLS 连接，走代理时尤其明显。"""
+    session = getattr(_thread_local, "session", None)
+    if session is None:
+        session = requests.Session()
+        adapter = requests.adapters.HTTPAdapter(
+            pool_connections=max(4, config.HTTP_POOL_SIZE),
+            pool_maxsize=max(4, config.HTTP_POOL_SIZE),
+            max_retries=0,
+        )
+        session.mount("https://", adapter)
+        session.mount("http://", adapter)
+        _thread_local.session = session
+    return session
+
+
+def source_timeout(source: str | None) -> int:
+    """按数据源取超时；没配置就用全局默认。"""
+    if source:
+        return int(config.SOURCE_TIMEOUTS.get(source, config.HTTP_TIMEOUT))
+    return config.HTTP_TIMEOUT
+
+
+def source_retries(source: str | None) -> int:
+    """按数据源取重试次数；没配置就用全局默认。"""
+    if source:
+        return int(config.SOURCE_RETRIES.get(source, config.HTTP_RETRIES))
+    return config.HTTP_RETRIES
 
 
 def _proxy_config() -> dict[str, str] | None:
@@ -107,10 +138,13 @@ def get_text(
     timeout: int | None = None,
     retries: int | None = None,
     accept: str = "*/*",
+    source: str | None = None,
 ) -> str:
     """GET 一个 URL 并返回响应文本，失败时自动重试。"""
-    timeout = timeout or config.HTTP_TIMEOUT
-    retries = config.HTTP_RETRIES if retries is None else retries
+    if timeout is None:
+        timeout = source_timeout(source)
+    if retries is None:
+        retries = source_retries(source)
 
     if params:
         query = urllib.parse.urlencode(params, doseq=True, quote_via=urllib.parse.quote)
@@ -124,7 +158,7 @@ def get_text(
         try:
             if _HAS_REQUESTS:
                 proxies = _proxy_config()
-                resp = requests.get(
+                resp = _session().get(
                     url,
                     headers={
                         "User-Agent": config.USER_AGENT,
@@ -187,10 +221,12 @@ def get_json(
     *,
     timeout: int | None = None,
     retries: int | None = None,
+    source: str | None = None,
 ) -> dict:
     """GET 一个 JSON 接口。"""
     text = get_text(
-        url, params, timeout=timeout, retries=retries, accept="application/json"
+        url, params, timeout=timeout, retries=retries, accept="application/json",
+        source=source,
     )
     try:
         return json.loads(text)

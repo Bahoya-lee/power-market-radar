@@ -208,7 +208,7 @@ def fetch_openalex(topic: dict) -> list[dict]:
 
     for job in jobs:
         params = _openalex_params(topic["queries"], **job)
-        payload = get_json(OPENALEX_BASE, params)
+        payload = get_json(OPENALEX_BASE, params, source="openalex")
         for item in payload.get("results", []):
             paper = _openalex_to_paper(item, topic["id"])
             if paper:
@@ -243,8 +243,7 @@ def fetch_arxiv(topic: dict, max_results: int = 30) -> list[dict]:
             ARXIV_BASE,
             params,
             accept="application/atom+xml",
-            timeout=config.ARXIV_TIMEOUT,
-            retries=config.ARXIV_RETRIES,
+            source="arxiv",
         )
     except FetchError:
         # arXiv 在部分网络环境下直连会被重置。这里改用 OpenAlex 的预印本记录，
@@ -322,7 +321,7 @@ def _fetch_arxiv_via_openalex(topic: dict, max_results: int = 30) -> list[dict]:
         per_page=max(30, max_results * 2),
         type_filter="preprint",
     )
-    payload = get_json(OPENALEX_BASE, params)
+    payload = get_json(OPENALEX_BASE, params, source="openalex")
     out: list[dict] = []
     for item in payload.get("results", []):
         paper = _openalex_to_paper(item, topic["id"])
@@ -378,7 +377,7 @@ def fetch_crossref(topic: dict, rows: int = 25) -> list[dict]:
             ),
             "mailto": config.MAILTO,
         }
-        payload = get_json(CROSSREF_BASE, params)
+        payload = get_json(CROSSREF_BASE, params, source="crossref")
         items = (payload.get("message") or {}).get("items") or []
 
         for item in items:
@@ -464,7 +463,7 @@ def fetch_semanticscholar(topic: dict, limit: int = 25) -> list[dict]:
     if os.environ.get("S2_API_KEY"):
         params["x-api-key"] = os.environ["S2_API_KEY"]
 
-    payload = get_json(S2_BASE, params)
+    payload = get_json(S2_BASE, params, source="semanticscholar")
     out: list[dict] = []
     for item in payload.get("data") or []:
         title = clean_text(item.get("title"))

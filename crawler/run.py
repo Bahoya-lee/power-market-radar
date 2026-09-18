@@ -13,19 +13,20 @@ from __future__ import annotations
 
 import argparse
 import sys
+import time
 import traceback
-from collections import Counter
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from collections import Counter, deque
+from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
 from datetime import datetime
 from pathlib import Path
 
 if __package__ in (None, ""):  # 允许 python crawler/run.py 直接运行
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-    from crawler import build, config, sources  # type: ignore
+    from crawler import build, config, metrics, sources  # type: ignore
     from crawler.netclient import has_network  # type: ignore
     from crawler.store import Store  # type: ignore
 else:
-    from . import build, config, sources
+    from . import build, config, metrics, sources
     from .netclient import has_network
     from .store import Store
 
@@ -84,6 +85,11 @@ def parse_args(argv=None):
     ap.add_argument("--open", dest="open_browser", action="store_true", help="完成后打开网站")
     ap.add_argument("--quiet", action="store_true", help="精简输出（适合定时任务）")
     ap.add_argument("--fresh", action="store_true", help="清空本地库后重新抓取")
+    ap.add_argument("--refresh-metrics", action="store_true",
+                    help="强制重新回查被引数与期刊层级（忽略缓存有效期）")
+    ap.add_argument("--no-metrics", action="store_true", help="跳过指标补全")
+    ap.add_argument("--max-minutes", type=float, default=None,
+                    help=f"抓取时间预算（分钟），默认 {config.MAX_UPDATE_MINUTES}；0 表示不限时")
     ap.add_argument("--list-topics", action="store_true", help="列出所有主题后退出")
     return ap.parse_args(argv)
 
@@ -103,6 +109,90 @@ def select_topics(spec):
     return picked
 
 
+# ---------------------------------------------------------------- 抓取调度
+
+def _crawl_all(topics, *, quiet: bool, max_minutes: float) -> dict:
+    """抓取全部主题，返回 (文献, 错误, 是否提前收工, 被暂停的数据源)。
+
+    两个保护机制，避免网络异常时一次更新跑上几个小时：
+      1. 时间预算：到点就不再提交新主题，用已拿到的数据继续建站；
+      2. 熔断：某个数据源连续失败若干次后，剩余主题不再请求它。
+    """
+    budget_sec = max(0.0, max_minutes) * 60
+    deadline = (time.monotonic() + budget_sec) if budget_sec else None
+
+    collected: list[dict] = []
+    errors: list[dict] = []
+    source_failures: Counter[str] = Counter()
+    skipped: set[str] = set()
+    pending = deque(topics)
+    total = len(topics)
+    done = 0
+    stopped_early = False
+
+    workers = max(1, min(config.MAX_TOPIC_WORKERS, total))
+    pool = ThreadPoolExecutor(max_workers=workers)
+    running: dict = {}
+    try:
+        while pending or running:
+            # 提交新任务：受并发数与时间预算约束
+            while pending and len(running) < workers:
+                if deadline is not None and time.monotonic() >= deadline:
+                    stopped_early = True
+                    break
+                topic = pending.popleft()
+                future = pool.submit(
+                    sources.fetch_topic, topic, config.SOURCES, set(skipped)
+                )
+                running[future] = (topic, time.monotonic())
+
+            if not running:
+                break
+
+            wait_timeout = 5.0
+            if deadline is not None:
+                wait_timeout = max(0.5, min(wait_timeout, deadline - time.monotonic()))
+            finished, _ = wait(
+                list(running), timeout=wait_timeout, return_when=FIRST_COMPLETED
+            )
+
+            for future in finished:
+                topic, submitted = running.pop(future)
+                done += 1
+                got, errs = future.result()
+                collected.extend(got)
+                errors.extend(errs)
+
+                # 熔断：某个数据源连续失败超过阈值后，本轮不再请求它
+                failed = {err.get("source") or "" for err in errs}
+                for name in config.SOURCES:
+                    if not config.SOURCES.get(name):
+                        continue
+                    if name in failed:
+                        source_failures[name] += 1
+                        if source_failures[name] >= config.SOURCE_FAILURE_LIMIT:
+                            skipped.add(name)
+                    else:
+                        source_failures[name] = 0
+
+                if not quiet:
+                    spent = time.monotonic() - submitted
+                    progress(done, total, f"{topic['zh']}（{spent:.0f}s）")
+
+            if pending and deadline is not None and time.monotonic() >= deadline:
+                stopped_early = True
+    finally:
+        pool.shutdown(wait=True, cancel_futures=True)
+
+    return {
+        "papers": collected,
+        "errors": errors,
+        "stopped_early": stopped_early or bool(pending),
+        "skipped_sources": sorted(skipped),
+        "source_failures": dict(source_failures),
+    }
+
+
 # ---------------------------------------------------------------- 主流程
 
 def main(argv=None) -> int:
@@ -119,6 +209,12 @@ def main(argv=None) -> int:
     started = datetime.now()
     banner()
 
+    # 时间预算：默认走 config.MAX_UPDATE_MINUTES；首次全量抓取（--fresh）默认不限时。
+    if args.max_minutes is None:
+        budget_minutes = 0.0 if args.fresh else float(config.MAX_UPDATE_MINUTES)
+    else:
+        budget_minutes = max(0.0, float(args.max_minutes))
+
     db_path = ROOT / "data" / "library.db"
     if args.fresh and db_path.exists():
         db_path.unlink()
@@ -131,6 +227,9 @@ def main(argv=None) -> int:
     fetched: list[dict] = []
     errors: list[dict] = []
     source_counts: Counter[str] = Counter()
+    stopped_early = False
+    skipped_sources: list[str] = []
+    crawl_seconds = 0.0
 
     if args.offline:
         say("  · 已跳过抓取（--offline），直接用本地库重建网站", C.YELLOW)
@@ -145,24 +244,12 @@ def main(argv=None) -> int:
         say(f"  · 网络正常，开始抓取 {len(topics)} 个主题 x {active_sources} 个数据源", C.DIM)
         say()
 
-        source_failures: Counter[str] = Counter()
-        workers = min(config.MAX_TOPIC_WORKERS, len(topics))
-        with ThreadPoolExecutor(max_workers=workers) as pool:
-            futures = {
-                pool.submit(sources.fetch_topic, topic, config.SOURCES, set()): topic
-                for topic in topics
-            }
-            done = 0
-            for future in as_completed(futures):
-                topic = futures[future]
-                done += 1
-                got, errs = future.result()
-                fetched.extend(got)
-                errors.extend(errs)
-                for err in errs:
-                    name = err.get("source") or ""
-                    source_failures[name] += 1
-                progress(done, len(topics), topic["zh"])
+        crawl_started = time.monotonic()
+        result = _crawl_all(topics, quiet=args.quiet, max_minutes=budget_minutes)
+        fetched, errors = result["papers"], result["errors"]
+        stopped_early = result["stopped_early"]
+        skipped_sources = result["skipped_sources"]
+        crawl_seconds = time.monotonic() - crawl_started
 
         print()
 
@@ -170,6 +257,18 @@ def main(argv=None) -> int:
         raw_count = len(fetched)
         fetched = sources.dedupe(fetched)
         say(f"  · 抓到 {raw_count} 条，跨源去重后 {len(fetched)} 条", C.DIM)
+        if skipped_sources:
+            say(
+                "  ! 连续失败已暂停的数据源："
+                + "、".join(config.SOURCE_LABELS.get(s, s) for s in skipped_sources),
+                C.YELLOW,
+            )
+        if stopped_early:
+            say(
+                f"  ! 已用满 {budget_minutes:g} 分钟预算，本轮只抓了部分主题；"
+                f"其余主题会在下次更新继续。",
+                C.YELLOW,
+            )
 
     new_uids = store.upsert_many(fetched) if fetched else set()
 
@@ -180,6 +279,42 @@ def main(argv=None) -> int:
 
     papers = store.load_all()
     say(f"  · 本地库累计 {len(papers)} 篇，正在生成网站数据…", C.DIM)
+
+    metrics_stats: dict = {}
+    if args.no_metrics or not config.METRICS_ENABLED:
+        say("  · 已跳过指标补全（被引数 / 期刊层级保持原样）", C.YELLOW)
+    else:
+        # 离线模式只用已有缓存；联网模式会回查新入库或超期的文献。
+        allow_net = (not args.offline) or args.refresh_metrics
+        # 指标补全和抓取共用同一份时间预算，避免前面用超了后面还在慢慢等。
+        metrics_budget = None
+        if budget_minutes and not args.offline:
+            metrics_budget = max(0.0, budget_minutes * 60 - crawl_seconds)
+            if metrics_budget < 10:
+                allow_net = False
+                say("  · 本次抓取已用满时间预算，指标补全留到下次更新", C.YELLOW)
+
+        if allow_net:
+            say("  · 正在补全被引数与期刊层级（OpenAlex）…", C.DIM)
+        elif args.offline and not args.refresh_metrics:
+            say("  · 离线模式：只用本地缓存的指标数据", C.DIM)
+        metrics_stats = metrics.enrich_papers(
+            papers,
+            ROOT,
+            allow_network=allow_net,
+            force=args.refresh_metrics,
+            progress=(None if args.quiet else progress),
+            budget_sec=metrics_budget,
+        )
+        if not args.quiet:
+            print()
+        say(
+            f"  · 指标覆盖：被引 {metrics_stats.get('with_citations', 0)}/{len(papers)} 篇，"
+            f"期刊层级 {metrics_stats.get('with_tier', 0)}/{len(papers)} 篇",
+            C.DIM,
+        )
+        if metrics_stats.get("timed_out"):
+            say("  ! 指标补全用满时间预算，剩余文献会在下次更新继续回查", C.YELLOW)
 
     finished = datetime.now()
     source_errors = Counter(e.get("source") or "" for e in errors)
@@ -213,6 +348,7 @@ def main(argv=None) -> int:
     )
     store.close()
 
+    elapsed_sec = round((finished - started).total_seconds(), 1)
     meta = build.build_site(
         papers,
         root=ROOT,
@@ -221,9 +357,13 @@ def main(argv=None) -> int:
         stats={
             "started": started.isoformat(timespec="seconds"),
             "finished": finished.isoformat(timespec="seconds"),
-            "elapsed_sec": round((finished - started).total_seconds(), 1),
+            "elapsed_sec": elapsed_sec,
             "topics": len(topics),
             "source_status": source_status,
+            "metrics": metrics_stats,
+            "stopped_early": stopped_early,
+            "skipped_sources": skipped_sources,
+            "budget_minutes": budget_minutes,
         },
     )
 

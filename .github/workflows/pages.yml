@@ -19,7 +19,8 @@ jobs:
   refresh:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # 抓取脚本自带 25 分钟预算，这里留出余量；超时被强杀会丢掉本次数据提交。
+    timeout-minutes: 45
     permissions:
       contents: write
     steps:
@@ -51,7 +52,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/data.js data/demo.js data/papers.json data/insights.json data/meta.json
+          git add data/data.js data/demo.js data/papers.json data/insights.json data/meta.json data/metrics_cache.json
           if git diff --cached --quiet; then
             echo "No website data changes"
           else

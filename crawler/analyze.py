@@ -50,8 +50,20 @@ def tag_paper(paper: dict) -> list[str]:
     return [tid for _, tid in found[:3]]
 
 
+# 期刊层级 -> 热度里的"平台分"
+_TIER_SCORE = {
+    "T1": 1.00,
+    "T2": 0.82,
+    "T3": 0.62,
+    "T4": 0.44,
+    "T5": 0.30,
+    "PRE": 0.34,
+    "": 0.15,
+}
+
+
 def enrich(papers: list[dict]) -> list[dict]:
-    """补全主题标签、计算引用速度等派生字段。"""
+    """补全主题标签、引用速度、期刊层级与热度分等派生字段。"""
     today = date.today()
     for p in papers:
         p["topics"] = tag_paper(p)
@@ -63,8 +75,39 @@ def enrich(papers: list[dict]) -> list[dict]:
         p["cite_per_year"] = round(citations / age, 2)
 
         p["recency_days"] = _days_since(p.get("date") or f"{year}-01-01")
-        p["is_top_venue"] = bool((p.get("journal_weight") or 0) >= 0.85)
+
+        tier = str(p.get("venue_tier") or "").upper()
+        p["venue_tier"] = tier
+        p["venue_tier_label"] = config.TIER_LABELS.get(tier, "") if tier else ""
+        p["reference_count"] = int(p.get("reference_count") or 0)
+        p["is_top_venue"] = bool(
+            tier in {"T1", "T2"} or (p.get("journal_weight") or 0) >= 0.85
+        )
+
+    _assign_heat(papers)
     return papers
+
+
+def _assign_heat(papers: list[dict]) -> None:
+    """给每篇文献算一个 0-100 的"热度"综合分。
+
+    热度 = 引用速度(32%) + 被引总量(22%) + 新近程度(30%) + 期刊层级(16%)。
+    四项先各自归一化，避免被绝对数值大的老文献垄断榜单。
+    """
+    if not papers:
+        return
+    velocity = [math.log1p(max(0.0, p.get("cite_per_year") or 0)) for p in papers]
+    cited = [math.log1p(max(0, p.get("citations") or 0)) for p in papers]
+    recency = [
+        math.exp(-min(max(int(p.get("recency_days") or 9999), 0), 3650) / 180.0)
+        for p in papers
+    ]
+    venue = [_TIER_SCORE.get(p.get("venue_tier") or "", _TIER_SCORE[""]) for p in papers]
+
+    v_n, c_n = _norm(velocity), _norm(cited)
+    for i, p in enumerate(papers):
+        score = 0.32 * v_n[i] + 0.22 * c_n[i] + 0.30 * recency[i] + 0.16 * venue[i]
+        p["heat"] = round(score * 100, 1)
 
 
 def _days_since(iso: str) -> int:

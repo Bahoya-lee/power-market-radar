@@ -40,8 +40,7 @@ def build_site(
     new_uids = new_uids or set()
 
     papers = analyze.enrich(papers)
-    papers.sort(key=lambda p: (p.get("date") or "", p.get("citations") or 0), reverse=True)
-    papers = papers[: config.MAX_PAPERS_IN_SITE]
+    papers = select_for_site(papers, config.MAX_PAPERS_IN_SITE)
 
     for p in papers:
         if p.get("abstract") and len(p["abstract"]) > config.ABSTRACT_KEEP:
@@ -73,6 +72,15 @@ def build_site(
             "recent30": summary["recent30"],
             "new_today": summary["new_today"],
             "oa": summary["oa"],
+            "metrics": {
+                "total": len(papers),
+                "with_citations": sum(1 for p in papers if p.get("metrics_source")),
+                "with_tier": sum(1 for p in papers if p.get("venue_tier")),
+                "updated_at": max(
+                    (p.get("metrics_updated") or "" for p in papers), default=""
+                ),
+                "source": "OpenAlex",
+            },
         }
     )
 
@@ -105,6 +113,45 @@ def build_site(
 
     _write_demo(root, papers, payload)
     return meta
+
+
+def select_for_site(papers: list[dict], limit: int) -> list[dict]:
+    """挑选进入网站的文献：以最新为主，同时给高被引经典留固定名额。
+
+    只按时间截断的话，随着每天抓到的超新文献越来越多，被引高的经典文献会被
+    一直往后挤，最终"按被引数排序"也排不出真正有影响力的工作。这里把约 20%
+    的名额（至少 100 篇）留给窗口外的高被引文献。
+    """
+    ordered = sorted(
+        papers, key=lambda p: (p.get("date") or "", p.get("citations") or 0), reverse=True
+    )
+    if len(ordered) <= limit:
+        return ordered
+
+    cutoff = (date.today() - timedelta(days=config.RECENT_DAYS)).isoformat()
+    recent = [p for p in ordered if (p.get("date") or "") >= cutoff]
+    older = [p for p in ordered if (p.get("date") or "") < cutoff]
+    if not older:
+        return ordered[:limit]
+
+    classic_slots = min(len(older), max(100, limit // 5))
+    classics = sorted(
+        older,
+        key=lambda p: (p.get("citations") or 0, p.get("journal_weight") or 0),
+        reverse=True,
+    )[:classic_slots]
+
+    keep = recent[: max(0, limit - len(classics))] + classics
+    if len(keep) < limit:
+        # 经典文献不足时，用剩下的最新文献补满
+        chosen = {id(p) for p in keep}
+        for paper in ordered:
+            if len(keep) >= limit:
+                break
+            if id(paper) not in chosen:
+                keep.append(paper)
+    keep.sort(key=lambda p: (p.get("date") or "", p.get("citations") or 0), reverse=True)
+    return keep
 
 
 # ---------------------------------------------------------------- 演示数据

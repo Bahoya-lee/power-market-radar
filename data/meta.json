@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-09-18 04:59",
+  "updated_at": "2026-09-18 19:15",
   "updated_date": "2026-09-18",
-  "generated_ts": 1789707584812,
+  "generated_ts": 1789730138581,
   "source_count": 3,
   "errors": [],
   "error_count": 0,
@@ -10,24 +10,24 @@
       "id": "openalex",
       "name": "OpenAlex",
       "enabled": true,
-      "status": "ok",
-      "fetched": 631,
+      "status": "empty",
+      "fetched": 0,
       "errors": 0
     },
     {
       "id": "arxiv",
       "name": "arXiv",
       "enabled": true,
-      "status": "ok",
-      "fetched": 97,
+      "status": "empty",
+      "fetched": 0,
       "errors": 0
     },
     {
       "id": "crossref",
       "name": "Crossref",
       "enabled": true,
-      "status": "ok",
-      "fetched": 900,
+      "status": "empty",
+      "fetched": 0,
       "errors": 0
     },
     {
@@ -40,33 +40,33 @@
     }
   ],
   "stats": {
-    "started": "2026-09-18T04:58:13",
-    "finished": "2026-09-18T04:59:43",
-    "elapsed_sec": 90.3,
+    "started": "2026-09-18T19:15:02",
+    "finished": "2026-09-18T19:15:02",
+    "elapsed_sec": 0.0,
     "topics": 18,
     "source_status": [
       {
         "id": "openalex",
         "name": "OpenAlex",
         "enabled": true,
-        "status": "ok",
-        "fetched": 631,
+        "status": "empty",
+        "fetched": 0,
         "errors": 0
       },
       {
         "id": "arxiv",
         "name": "arXiv",
         "enabled": true,
-        "status": "ok",
-        "fetched": 97,
+        "status": "empty",
+        "fetched": 0,
         "errors": 0
       },
       {
         "id": "crossref",
         "name": "Crossref",
         "enabled": true,
-        "status": "ok",
-        "fetched": 900,
+        "status": "empty",
+        "fetched": 0,
         "errors": 0
       },
       {
@@ -77,10 +77,36 @@
         "fetched": 0,
         "errors": 0
       }
-    ]
+    ],
+    "metrics": {
+      "enabled": true,
+      "network": false,
+      "looked_up": 0,
+      "title_looked_up": 0,
+      "title_hits": 0,
+      "sources_fetched": 0,
+      "cached": 1777,
+      "errors": 0,
+      "timed_out": false,
+      "budget_sec": null,
+      "updated_at": "2026-09-18 19:13",
+      "with_citations": 1777,
+      "with_tier": 1749,
+      "total": 2675
+    },
+    "stopped_early": false,
+    "skipped_sources": [],
+    "budget_minutes": 25.0
   },
   "total": 2000,
-  "recent30": 1303,
-  "new_today": 336,
-  "oa": 659
+  "recent30": 1750,
+  "new_today": 0,
+  "oa": 173,
+  "metrics": {
+    "total": 2000,
+    "with_citations": 1187,
+    "with_tier": 1164,
+    "updated_at": "2026-09-18",
+    "source": "OpenAlex"
+  }
 }

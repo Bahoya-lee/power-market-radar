@@ -18,10 +18,10 @@ from pathlib import Path
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-    from crawler import analyze, build, config, sources  # type: ignore
+    from crawler import analyze, build, config, metrics, sources  # type: ignore
     from crawler.store import Store  # type: ignore
 else:
-    from . import analyze, build, config, sources
+    from . import analyze, build, config, metrics, sources
     from .store import Store
 
 
@@ -249,6 +249,75 @@ def main() -> int:
         )
         assert tagged, "关键词打标签失效"
         print(f"  · 打标签：样例归入 {tagged}")
+
+        # 指标层：层级判定、标题匹配、缓存套用
+        assert metrics.tier_label("T1") == "顶级期刊", "期刊层级文案异常"
+        assert metrics._venue_tier("Applied Energy")[0] == "T1", "重点期刊没有定到 T1"
+        assert metrics._venue_tier("Some Unknown Journal", src_type="repository")[0] == "PRE"
+        assert metrics._venue_tier("Journal of Testing", impact=7.2)[0] == "T2"
+        assert metrics._titles_match(
+            "Virtual power plant aggregation for ancillary service markets",
+            "Virtual Power Plant Aggregation for Ancillary Service Markets",
+        ), "标题匹配失效"
+        assert not metrics._titles_match(
+            "Virtual power plant aggregation for ancillary service markets",
+            "A completely different paper about weather forecasting",
+        ), "标题匹配过于宽松"
+
+        cache = {
+            "version": metrics.CACHE_VERSION,
+            "updated_at": "2026-09-18",
+            "works": {
+                "doi:10.1016/j.apenergy.2026.100001": {
+                    "citations": 51,
+                    "reference_count": 33,
+                    "source_id": "S109565702",
+                    "source_name": "Applied Energy",
+                    "source_type": "journal",
+                    "checked": "2026-09-18",
+                }
+            },
+            "sources": {
+                "S109565702": {
+                    "name": "Applied Energy",
+                    "type": "journal",
+                    "impact": 15.2,
+                    "h_index": 388,
+                    "tier": "T1",
+                    "checked": "2026-09-18",
+                }
+            },
+        }
+        probe = {
+            "doi": "10.1016/j.apenergy.2026.100001",
+            "title": "Electricity price forecasting with deep learning",
+            "citations": 42,
+        }
+        assert metrics.apply_cache([probe], cache) == 1, "指标缓存没有套用"
+        assert probe["citations"] == 51, "被引数没有取两者较大值"
+        assert probe["reference_count"] == 33 and probe["venue_tier"] == "T1"
+        analyze.enrich([probe])
+        assert probe["venue_tier_label"] == "顶级期刊" and probe["heat"] >= 0, "热度计算异常"
+        print(
+            f"  · 指标：被引 {probe['citations']} / 参考文献 {probe['reference_count']} / "
+            f"层级 {probe['venue_tier']}·{probe['venue_tier_label']} / 热度 {probe['heat']}"
+        )
+
+        # 站点选文：最新为主，同时保住高被引经典
+        recent_pool = [
+            {"uid": f"new-{i}", "title": f"new {i}", "topics": [],
+             "date": "2026-09-01", "year": 2026, "citations": 0}
+            for i in range(200)
+        ]
+        classic_pool = [
+            {"uid": f"old-{i}", "title": f"classic {i}", "topics": [],
+             "date": "2019-01-01", "year": 2019, "citations": 300 - i}
+            for i in range(5)
+        ]
+        picked = build.select_for_site(recent_pool + classic_pool, 50)
+        assert len(picked) == 50, "站点选文数量不对"
+        assert any(p["uid"].startswith("old-") for p in picked), "高被引经典被挤出了站点"
+        print(f"  · 选文：从 205 篇里挑 50 篇，保留 {sum(1 for p in picked if p['uid'].startswith('old-'))} 篇经典")
 
     finally:
         if store is not None:

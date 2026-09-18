@@ -24,10 +24,32 @@ HTTP_RETRIES = 3           # 失败重试次数
 HTTP_BACKOFF = 2.5         # 重试退避基数（秒）
 REQUEST_INTERVAL = 1.2     # 同一数据源两次请求之间的间隔（秒），避免触发限流
 
+# 各数据源各自的超时与重试：arXiv 在国内经常被重置，所以等得更短、更早放弃；
+# 其余源也不让单次请求拖太久，避免代理异常时整轮更新被一两个请求卡死。
+SOURCE_TIMEOUTS = {
+    "openalex": 25,
+    "arxiv": 12,
+    "crossref": 25,
+    "semanticscholar": 20,
+}
+SOURCE_RETRIES = {
+    "openalex": 2,
+    "arxiv": 1,
+    "crossref": 2,
+    "semanticscholar": 2,
+}
+
+# 单次更新的时间预算（分钟）。到点就停止抓取、用已经拿到的数据建站，
+# 保证"一键更新"和每日任务不会因为网络异常跑上几个小时。
+# 需要不限时（例如首次全量抓取）时用 --max-minutes 0。
+MAX_UPDATE_MINUTES = 25
+# 连接池：复用 TCP/TLS 连接，走代理时能省掉大量握手时间。
+HTTP_POOL_SIZE = 8
+
 # 并发抓取：主题级和单个主题内的数据源级并行度。
 # 过大会触发 OpenAlex / Crossref 限流，过小又拖慢整次更新。
-MAX_TOPIC_WORKERS = 3
-MAX_SOURCE_WORKERS = 2
+MAX_TOPIC_WORKERS = 4
+MAX_SOURCE_WORKERS = 3
 
 # arXiv 直连在国内网络下经常被重置，这里缩短等待并快速切换到 OpenAlex 预印本兜底。
 ARXIV_TIMEOUT = 12
@@ -47,6 +69,17 @@ PER_TOPIC_PREPRINTS = 15   # 每个主题从 OpenAlex 补充多少条预印本
 # 建站数据上限
 MAX_PAPERS_IN_SITE = 2000  # 站点最多展示多少篇（按时间倒序保留）
 ABSTRACT_KEEP = 1400       # 摘要截断长度（字符）
+
+# 指标补全（被引数 / 参考文献数 / 期刊层级）
+# OpenAlex 之外的源（Crossref、arXiv）拿不到被引数，更拿不到期刊层级，
+# 这里统一按 DOI（无 DOI 时按标题）回查 OpenAlex 补齐，并把结果缓存到本地，
+# 日常增量更新只回查新入库或超期未更新的文献。
+METRICS_ENABLED = True
+METRICS_BATCH = 40          # 一次请求最多回查多少个 DOI（OpenAlex 上限 50）
+METRICS_CACHE = "data/metrics_cache.json"
+METRICS_REFRESH_DAYS = 7    # 缓存多久之后重新回查一次被引数
+METRICS_TITLE_LOOKUPS = 300 # 单次更新最多用标题检索补全多少篇（无 DOI 的预印本）
+METRICS_WORKERS = 3         # 指标回查的并发请求数（网络抖动时靠并发保吞吐）
 
 # 数据源开关
 SOURCES = {
@@ -382,6 +415,70 @@ TOP_JOURNALS = {
     "expert systems with applications": 0.68,
     "energy informatics": 0.72,
     "advances in applied energy": 0.90,
+}
+
+# 期刊层级：先看这份人工整理的名单（电力/能源/综合领域），
+# 名单外的期刊由 crawler/metrics.py 依据 OpenAlex 的期刊指标自动定级。
+#
+#   T1 顶级期刊 / T2 权威期刊 / T3 核心期刊 / T4 一般期刊 / T5 新兴或低影响期刊
+#   PRE 预印本（arXiv、SSRN、Zenodo 等，不算期刊层级）
+JOURNAL_TIERS = {
+    # ---- T1：本领域公认的顶刊 ----
+    "nature energy": "T1",
+    "nature climate change": "T1",
+    "joule": "T1",
+    "energy & environmental science": "T1",
+    "progress in energy and combustion science": "T1",
+    "applied energy": "T1",
+    "advances in applied energy": "T1",
+    "energy conversion and management": "T1",
+    "renewable and sustainable energy reviews": "T1",
+    "ieee transactions on power systems": "T1",
+    "ieee transactions on smart grid": "T1",
+    "ieee transactions on sustainable energy": "T1",
+    "ieee transactions on industrial informatics": "T1",
+    "ieee transactions on energy markets, policy and regulation": "T1",
+    # ---- T2：领域权威期刊 ----
+    "energy economics": "T2",
+    "energy policy": "T2",
+    "the energy journal": "T2",
+    "energy": "T2",
+    "ieee transactions on power delivery": "T2",
+    "ieee transactions on industry applications": "T2",
+    "ieee transactions on transportation electrification": "T2",
+    "electric power systems research": "T2",
+    "international journal of electrical power & energy systems": "T2",
+    "journal of modern power systems and clean energy": "T2",
+    "csee journal of power and energy systems": "T2",
+    "protection and control of modern power systems": "T2",
+    "iet generation, transmission & distribution": "T2",
+    "iet renewable power generation": "T2",
+    "energy strategy reviews": "T2",
+    "journal of energy storage": "T2",
+    "sustainable energy, grids and networks": "T2",
+    "energy conversion and economics": "T2",
+    "utilities policy": "T2",
+    # ---- T3：领域核心期刊 ----
+    "ieee access": "T3",
+    "energies": "T3",
+    "sustainability": "T3",
+    "energy reports": "T3",
+    "the electricity journal": "T3",
+    "applied sciences": "T3",
+    "energy informatics": "T3",
+    "energy sources part b: economics, planning, and policy": "T3",
+    "international journal of sustainable energy": "T3",
+}
+
+# 期刊层级显示文案
+TIER_LABELS = {
+    "T1": "顶级期刊",
+    "T2": "权威期刊",
+    "T3": "核心期刊",
+    "T4": "一般期刊",
+    "T5": "新兴期刊",
+    "PRE": "预印本",
+    "NA": "未收录",
 }
 
 # ---------------------------------------------------------------- 停用词

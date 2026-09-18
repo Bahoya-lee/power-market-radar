@@ -58,11 +58,23 @@
       </div>
 
       <aside class="hero-visual">
+        <div class="block-toolbar">
+          <span class="block-label">头条论文排序</span>
+          <select class="sort-select compact" id="featuredSort" aria-label="头条论文排序方式">
+            <option value="heat">综合热度</option>
+            <option value="cited">被引数</option>
+            <option value="velocity">引用速度</option>
+            <option value="reference">参考文献数</option>
+            <option value="venue">期刊层级</option>
+            <option value="newest">最新发表</option>
+          </select>
+        </div>
         <div class="featured-card" id="featuredCard"></div>
       </aside>
     </section>
 
     <section class="metrics" id="metrics" aria-label="数据概况"></section>
+    <p class="metrics-note" id="metricsNote"></p>
 
     <section class="content-shell">
       <div class="content-head">
@@ -88,11 +100,16 @@
           <button class="lang-btn active" type="button" data-lang="zh">中文</button>
           <button class="lang-btn" type="button" data-lang="en">原文</button>
         </div>
+        <span class="block-label">论文排序</span>
         <select class="sort-select" id="sortSelect" aria-label="排序方式">
           <option value="newest">最新发表</option>
-          <option value="cited">总被引</option>
+          <option value="oldest">最早发表</option>
+          <option value="heat">综合热度</option>
+          <option value="cited">被引数</option>
           <option value="velocity">引用速度</option>
-          <option value="venue">重点期刊优先</option>
+          <option value="reference">参考文献数</option>
+          <option value="venue">期刊层级</option>
+          <option value="impact">期刊影响因子</option>
         </select>
       </div>
 
@@ -110,7 +127,16 @@
 
         <div class="insights-grid">
           <div class="insight">
-            <h3>热点主题</h3>
+            <div class="insight-head">
+              <h3>热点主题</h3>
+              <select class="sort-select compact" id="topicSort" aria-label="热点主题排序方式">
+                <option value="score">按热度分</option>
+                <option value="total">按论文总数</option>
+                <option value="recent30">按近 30 天新增</option>
+                <option value="impact">按平均引用速度</option>
+                <option value="top_venue_ratio">按重点期刊占比</option>
+              </select>
+            </div>
             <div id="hotTopics"></div>
             <p class="insight-note">按近半年热度与重点期刊占比综合排序。</p>
           </div>
@@ -122,7 +148,15 @@
           </div>
 
           <div class="insight">
-            <h3>来源分布</h3>
+            <div class="insight-head">
+              <h3>来源分布</h3>
+              <select class="sort-select compact" id="sourceSort" aria-label="来源分布排序方式">
+                <option value="count">按论文数</option>
+                <option value="cited">按平均被引</option>
+                <option value="recent">按近 30 天新增</option>
+                <option value="name">按名称</option>
+              </select>
+            </div>
             <div id="sourceStats"></div>
             <p class="insight-note">当前资料库来源分布。</p>
           </div>
@@ -132,7 +166,8 @@
   </main>
 
   <footer>
-    <p>数据来源：OpenAlex · arXiv · Crossref（可选 Semantic Scholar）</p>
+    <p>文献来源：OpenAlex · arXiv · Crossref（可选 Semantic Scholar）</p>
+    <p>指标来源：OpenAlex —— 每篇文献的被引数、参考文献数与期刊层级（T1 顶级 / T2 权威 / T3 核心 / T4 一般 / T5 新兴）</p>
     <p>本页数据由 crawler 每日抓取后本地生成，标题、摘要和期刊名支持预翻译为中文。</p>
   </footer>
 
@@ -143,7 +178,9 @@
         <button class="close-btn" id="closeDetail" type="button" aria-label="关闭">✕</button>
       </div>
       <div class="sheet-meta" id="detailMeta"></div>
+      <div class="sheet-metrics" id="detailMetrics"></div>
       <p class="sheet-abstract" id="detailAbstract"></p>
+      <div class="sheet-cite" id="detailCite"></div>
       <div class="sheet-actions" id="detailActions"></div>
     </div>
   </div>
