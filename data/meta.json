@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-09-20 05:11",
-  "updated_date": "2026-09-20",
-  "generated_ts": 1789881096912,
+  "updated_at": "2026-09-21 05:16",
+  "updated_date": "2026-09-21",
+  "generated_ts": 1789967817855,
   "source_count": 3,
   "errors": [],
   "error_count": 0,
@@ -19,7 +19,7 @@
       "name": "arXiv",
       "enabled": true,
       "status": "ok",
-      "fetched": 97,
+      "fetched": 98,
       "errors": 0
     },
     {
@@ -40,9 +40,9 @@
     }
   ],
   "stats": {
-    "started": "2026-09-20T05:09:21",
-    "finished": "2026-09-20T05:11:36",
-    "elapsed_sec": 134.6,
+    "started": "2026-09-21T05:14:36",
+    "finished": "2026-09-21T05:16:56",
+    "elapsed_sec": 140.7,
     "topics": 18,
     "source_status": [
       {
@@ -58,7 +58,7 @@
         "name": "arXiv",
         "enabled": true,
         "status": "ok",
-        "fetched": 97,
+        "fetched": 98,
         "errors": 0
       },
       {
@@ -81,18 +81,18 @@
     "metrics": {
       "enabled": true,
       "network": true,
-      "looked_up": 455,
+      "looked_up": 609,
       "title_looked_up": 300,
-      "title_hits": 11,
-      "sources_fetched": 60,
-      "cached": 2333,
+      "title_hits": 5,
+      "sources_fetched": 155,
+      "cached": 2668,
       "errors": 0,
       "timed_out": false,
-      "budget_sec": 1412.126479175,
-      "updated_at": "2026-09-20 05:11",
-      "with_citations": 2333,
-      "with_tier": 2300,
-      "total": 2706
+      "budget_sec": 1412.839626666,
+      "updated_at": "2026-09-21 05:16",
+      "with_citations": 2668,
+      "with_tier": 2626,
+      "total": 3019
     },
     "stopped_early": false,
     "skipped_sources": [],
@@ -100,13 +100,13 @@
   },
   "total": 2000,
   "recent30": 1749,
-  "new_today": 343,
-  "oa": 173,
+  "new_today": 313,
+  "oa": 175,
   "metrics": {
     "total": 2000,
-    "with_citations": 1690,
-    "with_tier": 1664,
-    "updated_at": "2026-09-20",
+    "with_citations": 1713,
+    "with_tier": 1678,
+    "updated_at": "2026-09-21",
     "source": "OpenAlex"
   }
 }
