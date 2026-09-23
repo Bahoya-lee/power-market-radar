@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-09-22 05:16",
-  "updated_date": "2026-09-22",
-  "generated_ts": 1790054168993,
+  "updated_at": "2026-09-23 05:00",
+  "updated_date": "2026-09-23",
+  "generated_ts": 1790139647724,
   "source_count": 3,
   "errors": [],
   "error_count": 0,
@@ -19,7 +19,7 @@
       "name": "arXiv",
       "enabled": true,
       "status": "ok",
-      "fetched": 97,
+      "fetched": 98,
       "errors": 0
     },
     {
@@ -40,9 +40,9 @@
     }
   ],
   "stats": {
-    "started": "2026-09-22T05:13:47",
-    "finished": "2026-09-22T05:16:07",
-    "elapsed_sec": 139.8,
+    "started": "2026-09-23T04:58:19",
+    "finished": "2026-09-23T05:00:46",
+    "elapsed_sec": 146.7,
     "topics": 18,
     "source_status": [
       {
@@ -58,7 +58,7 @@
         "name": "arXiv",
         "enabled": true,
         "status": "ok",
-        "fetched": 97,
+        "fetched": 98,
         "errors": 0
       },
       {
@@ -81,18 +81,18 @@
     "metrics": {
       "enabled": true,
       "network": true,
-      "looked_up": 629,
-      "title_looked_up": 300,
-      "title_hits": 3,
-      "sources_fetched": 105,
-      "cached": 2912,
+      "looked_up": 776,
+      "title_looked_up": 295,
+      "title_hits": 10,
+      "sources_fetched": 239,
+      "cached": 3477,
       "errors": 0,
       "timed_out": false,
-      "budget_sec": 1413.284104816,
-      "updated_at": "2026-09-22 05:16",
-      "with_citations": 2912,
-      "with_tier": 2870,
-      "total": 3373
+      "budget_sec": 1413.856456076,
+      "updated_at": "2026-09-23 05:00",
+      "with_citations": 3477,
+      "with_tier": 3426,
+      "total": 3764
     },
     "stopped_early": false,
     "skipped_sources": [],
@@ -100,13 +100,13 @@
   },
   "total": 2000,
   "recent30": 1748,
-  "new_today": 354,
-  "oa": 175,
+  "new_today": 391,
+  "oa": 177,
   "metrics": {
     "total": 2000,
-    "with_citations": 1603,
-    "with_tier": 1581,
-    "updated_at": "2026-09-22",
+    "with_citations": 1777,
+    "with_tier": 1748,
+    "updated_at": "2026-09-23",
     "source": "OpenAlex"
   }
 }
