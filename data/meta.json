@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-09-24 05:11",
-  "updated_date": "2026-09-24",
-  "generated_ts": 1790226681124,
+  "updated_at": "2026-09-25 05:13",
+  "updated_date": "2026-09-25",
+  "generated_ts": 1790313218158,
   "source_count": 3,
   "errors": [],
   "error_count": 0,
@@ -11,7 +11,7 @@
       "name": "OpenAlex",
       "enabled": true,
       "status": "ok",
-      "fetched": 631,
+      "fetched": 632,
       "errors": 0
     },
     {
@@ -19,7 +19,7 @@
       "name": "arXiv",
       "enabled": true,
       "status": "ok",
-      "fetched": 97,
+      "fetched": 99,
       "errors": 0
     },
     {
@@ -40,9 +40,9 @@
     }
   ],
   "stats": {
-    "started": "2026-09-24T05:09:00",
-    "finished": "2026-09-24T05:11:20",
-    "elapsed_sec": 139.3,
+    "started": "2026-09-25T05:10:41",
+    "finished": "2026-09-25T05:13:35",
+    "elapsed_sec": 174.3,
     "topics": 18,
     "source_status": [
       {
@@ -50,7 +50,7 @@
         "name": "OpenAlex",
         "enabled": true,
         "status": "ok",
-        "fetched": 631,
+        "fetched": 632,
         "errors": 0
       },
       {
@@ -58,7 +58,7 @@
         "name": "arXiv",
         "enabled": true,
         "status": "ok",
-        "fetched": 97,
+        "fetched": 99,
         "errors": 0
       },
       {
@@ -81,32 +81,32 @@
     "metrics": {
       "enabled": true,
       "network": true,
-      "looked_up": 634,
+      "looked_up": 1753,
       "title_looked_up": 300,
-      "title_hits": 28,
-      "sources_fetched": 101,
-      "cached": 3730,
+      "title_hits": 70,
+      "sources_fetched": 164,
+      "cached": 4126,
       "errors": 0,
       "timed_out": false,
-      "budget_sec": 1413.575853367,
-      "updated_at": "2026-09-24 05:11",
-      "with_citations": 3730,
-      "with_tier": 3677,
-      "total": 4188
+      "budget_sec": 1414.011233287,
+      "updated_at": "2026-09-25 05:13",
+      "with_citations": 4126,
+      "with_tier": 4074,
+      "total": 4567
     },
     "stopped_early": false,
     "skipped_sources": [],
     "budget_minutes": 25.0
   },
   "total": 2000,
-  "recent30": 1748,
-  "new_today": 424,
+  "recent30": 1747,
+  "new_today": 379,
   "oa": 174,
   "metrics": {
     "total": 2000,
-    "with_citations": 1607,
-    "with_tier": 1583,
-    "updated_at": "2026-09-24",
+    "with_citations": 1624,
+    "with_tier": 1598,
+    "updated_at": "2026-09-25",
     "source": "OpenAlex"
   }
 }
