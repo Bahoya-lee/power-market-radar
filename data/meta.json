@@ -1,36 +1,25 @@
 {
-  "updated_at": "2026-09-28 05:43",
-  "updated_date": "2026-09-28",
-  "generated_ts": 1790574236231,
+  "updated_at": "2026-09-29 06:00",
+  "updated_date": "2026-09-29",
+  "generated_ts": 1790661630576,
   "source_count": 3,
-  "errors": [
-    {
-      "topic": "renewable",
-      "source": "openalex",
-      "error": "获取失败（重试 2 次）：https://api.openalex.org/works?filter=title_and_abstract.search%3A%22renewable%20energy%20integration%20electricity%20market%22%7C%22variabl —— HTTP Error 429: Too Many Requests"
-    },
-    {
-      "topic": "vpp",
-      "source": "openalex",
-      "error": "获取失败（重试 2 次）：https://api.openalex.org/works?filter=title_and_abstract.search%3A%22virtual%20power%20plant%22%7C%22aggregator%20electricity%20market%22%7C —— HTTP Error 429: Too Many Requests"
-    }
-  ],
-  "error_count": 2,
+  "errors": [],
+  "error_count": 0,
   "source_status": [
     {
       "id": "openalex",
       "name": "OpenAlex",
       "enabled": true,
-      "status": "failed",
-      "fetched": 555,
-      "errors": 2
+      "status": "ok",
+      "fetched": 626,
+      "errors": 0
     },
     {
       "id": "arxiv",
       "name": "arXiv",
       "enabled": true,
       "status": "ok",
-      "fetched": 99,
+      "fetched": 184,
       "errors": 0
     },
     {
@@ -51,25 +40,25 @@
     }
   ],
   "stats": {
-    "started": "2026-09-28T05:41:17",
-    "finished": "2026-09-28T05:43:54",
-    "elapsed_sec": 157.4,
+    "started": "2026-09-29T05:58:22",
+    "finished": "2026-09-29T06:00:28",
+    "elapsed_sec": 126.3,
     "topics": 18,
     "source_status": [
       {
         "id": "openalex",
         "name": "OpenAlex",
         "enabled": true,
-        "status": "failed",
-        "fetched": 555,
-        "errors": 2
+        "status": "ok",
+        "fetched": 626,
+        "errors": 0
       },
       {
         "id": "arxiv",
         "name": "arXiv",
         "enabled": true,
         "status": "ok",
-        "fetched": 99,
+        "fetched": 184,
         "errors": 0
       },
       {
@@ -92,18 +81,18 @@
     "metrics": {
       "enabled": true,
       "network": true,
-      "looked_up": 967,
-      "title_looked_up": 283,
-      "title_hits": 9,
-      "sources_fetched": 167,
-      "cached": 5301,
+      "looked_up": 841,
+      "title_looked_up": 300,
+      "title_hits": 13,
+      "sources_fetched": 103,
+      "cached": 5576,
       "errors": 0,
       "timed_out": false,
-      "budget_sec": 1406.829481367,
-      "updated_at": "2026-09-28 05:43",
-      "with_citations": 5301,
-      "with_tier": 5248,
-      "total": 5569
+      "budget_sec": 1434.279877317,
+      "updated_at": "2026-09-29 06:00",
+      "with_citations": 5576,
+      "with_tier": 5521,
+      "total": 5953
     },
     "stopped_early": false,
     "skipped_sources": [],
@@ -111,13 +100,13 @@
   },
   "total": 2000,
   "recent30": 1744,
-  "new_today": 309,
-  "oa": 177,
+  "new_today": 384,
+  "oa": 180,
   "metrics": {
     "total": 2000,
-    "with_citations": 1774,
-    "with_tier": 1753,
-    "updated_at": "2026-09-28",
+    "with_citations": 1665,
+    "with_tier": 1646,
+    "updated_at": "2026-09-29",
     "source": "OpenAlex"
   }
 }
