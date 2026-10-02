@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-10-01 06:20",
-  "updated_date": "2026-10-01",
-  "generated_ts": 1790835636650,
+  "updated_at": "2026-10-02 06:00",
+  "updated_date": "2026-10-02",
+  "generated_ts": 1790920850333,
   "source_count": 3,
   "errors": [],
   "error_count": 0,
@@ -11,7 +11,7 @@
       "name": "OpenAlex",
       "enabled": true,
       "status": "ok",
-      "fetched": 625,
+      "fetched": 626,
       "errors": 0
     },
     {
@@ -40,9 +40,9 @@
     }
   ],
   "stats": {
-    "started": "2026-10-01T06:18:39",
-    "finished": "2026-10-01T06:20:30",
-    "elapsed_sec": 110.7,
+    "started": "2026-10-02T05:58:19",
+    "finished": "2026-10-02T06:00:48",
+    "elapsed_sec": 149.1,
     "topics": 18,
     "source_status": [
       {
@@ -50,7 +50,7 @@
         "name": "OpenAlex",
         "enabled": true,
         "status": "ok",
-        "fetched": 625,
+        "fetched": 626,
         "errors": 0
       },
       {
@@ -81,32 +81,32 @@
     "metrics": {
       "enabled": true,
       "network": true,
-      "looked_up": 891,
-      "title_looked_up": 94,
-      "title_hits": 0,
-      "sources_fetched": 305,
-      "cached": 6636,
+      "looked_up": 1692,
+      "title_looked_up": 300,
+      "title_hits": 55,
+      "sources_fetched": 32,
+      "cached": 6719,
       "errors": 0,
       "timed_out": false,
-      "budget_sec": 1435.5128009750001,
-      "updated_at": "2026-10-01 06:20",
-      "with_citations": 6636,
-      "with_tier": 6583,
-      "total": 6730
+      "budget_sec": 1434.124894085,
+      "updated_at": "2026-10-02 06:00",
+      "with_citations": 6719,
+      "with_tier": 6666,
+      "total": 6994
     },
     "stopped_early": false,
     "skipped_sources": [],
     "budget_minutes": 25.0
   },
   "total": 2000,
-  "recent30": 1739,
-  "new_today": 437,
-  "oa": 182,
+  "recent30": 1738,
+  "new_today": 264,
+  "oa": 183,
   "metrics": {
     "total": 2000,
-    "with_citations": 1949,
-    "with_tier": 1932,
-    "updated_at": "2026-10-01",
+    "with_citations": 1768,
+    "with_tier": 1752,
+    "updated_at": "2026-10-02",
     "source": "OpenAlex"
   }
 }
