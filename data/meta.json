@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-10-04 06:11",
-  "updated_date": "2026-10-04",
-  "generated_ts": 1791094297340,
+  "updated_at": "2026-10-05 06:03",
+  "updated_date": "2026-10-05",
+  "generated_ts": 1791180212026,
   "source_count": 3,
   "errors": [],
   "error_count": 0,
@@ -40,9 +40,9 @@
     }
   ],
   "stats": {
-    "started": "2026-10-04T06:09:21",
-    "finished": "2026-10-04T06:11:35",
-    "elapsed_sec": 134.6,
+    "started": "2026-10-05T06:01:09",
+    "finished": "2026-10-05T06:03:30",
+    "elapsed_sec": 140.6,
     "topics": 18,
     "source_status": [
       {
@@ -81,18 +81,18 @@
     "metrics": {
       "enabled": true,
       "network": true,
-      "looked_up": 1171,
+      "looked_up": 1385,
       "title_looked_up": 300,
-      "title_hits": 11,
-      "sources_fetched": 108,
-      "cached": 7232,
+      "title_hits": 8,
+      "sources_fetched": 118,
+      "cached": 7583,
       "errors": 0,
       "timed_out": false,
-      "budget_sec": 1435.347295546,
-      "updated_at": "2026-10-04 06:11",
-      "with_citations": 7232,
-      "with_tier": 7178,
-      "total": 7581
+      "budget_sec": 1434.6959605490001,
+      "updated_at": "2026-10-05 06:03",
+      "with_citations": 7583,
+      "with_tier": 7522,
+      "total": 7917
     },
     "stopped_early": false,
     "skipped_sources": [],
@@ -100,13 +100,13 @@
   },
   "total": 2000,
   "recent30": 1738,
-  "new_today": 285,
-  "oa": 189,
+  "new_today": 336,
+  "oa": 188,
   "metrics": {
     "total": 2000,
-    "with_citations": 1694,
-    "with_tier": 1679,
-    "updated_at": "2026-10-04",
+    "with_citations": 1710,
+    "with_tier": 1691,
+    "updated_at": "2026-10-05",
     "source": "OpenAlex"
   }
 }
