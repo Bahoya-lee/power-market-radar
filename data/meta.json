@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-10-12 06:19",
-  "updated_date": "2026-10-12",
-  "generated_ts": 1791785972415,
+  "updated_at": "2026-10-13 06:59",
+  "updated_date": "2026-10-13",
+  "generated_ts": 1791874787993,
   "source_count": 3,
   "errors": [],
   "error_count": 0,
@@ -11,7 +11,7 @@
       "name": "OpenAlex",
       "enabled": true,
       "status": "ok",
-      "fetched": 623,
+      "fetched": 619,
       "errors": 0
     },
     {
@@ -40,9 +40,9 @@
     }
   ],
   "stats": {
-    "started": "2026-10-12T06:16:56",
-    "finished": "2026-10-12T06:19:30",
-    "elapsed_sec": 153.8,
+    "started": "2026-10-13T06:57:23",
+    "finished": "2026-10-13T06:59:45",
+    "elapsed_sec": 141.9,
     "topics": 18,
     "source_status": [
       {
@@ -50,7 +50,7 @@
         "name": "OpenAlex",
         "enabled": true,
         "status": "ok",
-        "fetched": 623,
+        "fetched": 619,
         "errors": 0
       },
       {
@@ -81,18 +81,18 @@
     "metrics": {
       "enabled": true,
       "network": true,
-      "looked_up": 1837,
+      "looked_up": 1460,
       "title_looked_up": 300,
-      "title_hits": 8,
-      "sources_fetched": 119,
-      "cached": 10064,
+      "title_hits": 9,
+      "sources_fetched": 84,
+      "cached": 10360,
       "errors": 0,
       "timed_out": false,
-      "budget_sec": 1435.37884224,
-      "updated_at": "2026-10-12 06:19",
-      "with_citations": 10064,
-      "with_tier": 10002,
-      "total": 10428
+      "budget_sec": 1435.587160406,
+      "updated_at": "2026-10-13 06:59",
+      "with_citations": 10360,
+      "with_tier": 10296,
+      "total": 10798
     },
     "stopped_early": false,
     "skipped_sources": [],
@@ -100,13 +100,13 @@
   },
   "total": 2000,
   "recent30": 1735,
-  "new_today": 352,
-  "oa": 184,
+  "new_today": 370,
+  "oa": 188,
   "metrics": {
     "total": 2000,
-    "with_citations": 1683,
-    "with_tier": 1668,
-    "updated_at": "2026-10-12",
+    "with_citations": 1611,
+    "with_tier": 1596,
+    "updated_at": "2026-10-13",
     "source": "OpenAlex"
   }
 }
