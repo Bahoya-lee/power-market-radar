@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-10-17 04:51",
-  "updated_date": "2026-10-17",
-  "generated_ts": 1792212693289,
+  "updated_at": "2026-10-18 04:56",
+  "updated_date": "2026-10-18",
+  "generated_ts": 1792299412652,
   "source_count": 3,
   "errors": [],
   "error_count": 0,
@@ -19,7 +19,7 @@
       "name": "arXiv",
       "enabled": true,
       "status": "ok",
-      "fetched": 108,
+      "fetched": 184,
       "errors": 0
     },
     {
@@ -40,9 +40,9 @@
     }
   ],
   "stats": {
-    "started": "2026-10-17T04:47:53",
-    "finished": "2026-10-17T04:51:30",
-    "elapsed_sec": 216.8,
+    "started": "2026-10-18T04:54:07",
+    "finished": "2026-10-18T04:56:49",
+    "elapsed_sec": 162.3,
     "topics": 18,
     "source_status": [
       {
@@ -58,7 +58,7 @@
         "name": "arXiv",
         "enabled": true,
         "status": "ok",
-        "fetched": 108,
+        "fetched": 184,
         "errors": 0
       },
       {
@@ -81,18 +81,18 @@
     "metrics": {
       "enabled": true,
       "network": true,
-      "looked_up": 2731,
+      "looked_up": 2006,
       "title_looked_up": 300,
-      "title_hits": 27,
-      "sources_fetched": 100,
-      "cached": 11722,
+      "title_hits": 16,
+      "sources_fetched": 224,
+      "cached": 12092,
       "errors": 0,
       "timed_out": false,
-      "budget_sec": 1413.764345431,
-      "updated_at": "2026-10-17 04:51",
-      "with_citations": 11722,
-      "with_tier": 11543,
-      "total": 12147
+      "budget_sec": 1435.299667848,
+      "updated_at": "2026-10-18 04:56",
+      "with_citations": 12092,
+      "with_tier": 12024,
+      "total": 12521
     },
     "stopped_early": false,
     "skipped_sources": [],
@@ -100,13 +100,13 @@
   },
   "total": 2000,
   "recent30": 1732,
-  "new_today": 355,
-  "oa": 199,
+  "new_today": 374,
+  "oa": 195,
   "metrics": {
     "total": 2000,
-    "with_citations": 1625,
-    "with_tier": 1502,
-    "updated_at": "2026-10-17",
+    "with_citations": 1621,
+    "with_tier": 1605,
+    "updated_at": "2026-10-18",
     "source": "OpenAlex"
   }
 }
