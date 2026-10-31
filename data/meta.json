@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-10-30 06:13",
-  "updated_date": "2026-10-30",
-  "generated_ts": 1793340813424,
+  "updated_at": "2026-10-31 06:08",
+  "updated_date": "2026-10-31",
+  "generated_ts": 1793426920044,
   "source_count": 3,
   "errors": [],
   "error_count": 0,
@@ -19,7 +19,7 @@
       "name": "arXiv",
       "enabled": true,
       "status": "ok",
-      "fetched": 177,
+      "fetched": 184,
       "errors": 0
     },
     {
@@ -40,9 +40,9 @@
     }
   ],
   "stats": {
-    "started": "2026-10-30T06:10:11",
-    "finished": "2026-10-30T06:13:30",
-    "elapsed_sec": 198.5,
+    "started": "2026-10-31T06:05:22",
+    "finished": "2026-10-31T06:08:36",
+    "elapsed_sec": 193.5,
     "topics": 18,
     "source_status": [
       {
@@ -58,7 +58,7 @@
         "name": "arXiv",
         "enabled": true,
         "status": "ok",
-        "fetched": 177,
+        "fetched": 184,
         "errors": 0
       },
       {
@@ -81,18 +81,18 @@
     "metrics": {
       "enabled": true,
       "network": true,
-      "looked_up": 3149,
-      "title_looked_up": 300,
-      "title_hits": 26,
-      "sources_fetched": 99,
-      "cached": 16315,
+      "looked_up": 3219,
+      "title_looked_up": 269,
+      "title_hits": 13,
+      "sources_fetched": 125,
+      "cached": 16790,
       "errors": 0,
       "timed_out": false,
-      "budget_sec": 1429.3152377659999,
-      "updated_at": "2026-10-30 06:13",
-      "with_citations": 16315,
-      "with_tier": 16237,
-      "total": 16677
+      "budget_sec": 1435.392712794,
+      "updated_at": "2026-10-31 06:08",
+      "with_citations": 16790,
+      "with_tier": 16707,
+      "total": 17039
     },
     "stopped_early": false,
     "skipped_sources": [],
@@ -100,13 +100,13 @@
   },
   "total": 2000,
   "recent30": 1728,
-  "new_today": 349,
-  "oa": 194,
+  "new_today": 362,
+  "oa": 197,
   "metrics": {
     "total": 2000,
-    "with_citations": 1696,
-    "with_tier": 1683,
-    "updated_at": "2026-10-30",
+    "with_citations": 1809,
+    "with_tier": 1791,
+    "updated_at": "2026-10-31",
     "source": "OpenAlex"
   }
 }
