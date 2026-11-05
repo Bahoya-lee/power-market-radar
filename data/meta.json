@@ -1,18 +1,39 @@
 {
-  "updated_at": "2026-11-04 06:52",
-  "updated_date": "2026-11-04",
-  "generated_ts": 1793775152681,
+  "updated_at": "2026-11-05 07:13",
+  "updated_date": "2026-11-05",
+  "generated_ts": 1793862802220,
   "source_count": 3,
-  "errors": [],
-  "error_count": 0,
+  "errors": [
+    {
+      "topic": "price_forecast",
+      "source": "openalex",
+      "error": "获取失败（重试 2 次）：https://api.openalex.org/works?filter=title_and_abstract.search%3A%22electricity%20price%20forecasting%22%7C%22electricity%20price%20predict —— HTTP Error 429: Too Many Requests"
+    },
+    {
+      "topic": "demand_response",
+      "source": "openalex",
+      "error": "获取失败（重试 2 次）：https://api.openalex.org/works?filter=title_and_abstract.search%3A%22demand%20response%20electricity%20market%22%7C%22demand%20side%20manage —— HTTP Error 429: Too Many Requests"
+    },
+    {
+      "topic": "capacity",
+      "source": "openalex",
+      "error": "获取失败（重试 2 次）：https://api.openalex.org/works?filter=title_and_abstract.search%3A%22capacity%20market%20electricity%22%7C%22capacity%20remuneration%20mecha —— HTTP Error 429: Too Many Requests"
+    },
+    {
+      "topic": "spot_market",
+      "source": "openalex",
+      "error": "获取失败（重试 2 次）：https://api.openalex.org/works?filter=title_and_abstract.search%3A%22electricity%20spot%20market%22%7C%22electricity%20market%20clearing%22% —— HTTP Error 429: Too Many Requests"
+    }
+  ],
+  "error_count": 4,
   "source_status": [
     {
       "id": "openalex",
       "name": "OpenAlex",
       "enabled": true,
-      "status": "ok",
-      "fetched": 620,
-      "errors": 0
+      "status": "failed",
+      "fetched": 70,
+      "errors": 4
     },
     {
       "id": "arxiv",
@@ -40,18 +61,18 @@
     }
   ],
   "stats": {
-    "started": "2026-11-04T06:49:22",
-    "finished": "2026-11-04T06:52:30",
-    "elapsed_sec": 187.5,
+    "started": "2026-11-05T07:08:53",
+    "finished": "2026-11-05T07:13:19",
+    "elapsed_sec": 266.1,
     "topics": 18,
     "source_status": [
       {
         "id": "openalex",
         "name": "OpenAlex",
         "enabled": true,
-        "status": "ok",
-        "fetched": 620,
-        "errors": 0
+        "status": "failed",
+        "fetched": 70,
+        "errors": 4
       },
       {
         "id": "arxiv",
@@ -81,32 +102,34 @@
     "metrics": {
       "enabled": true,
       "network": true,
-      "looked_up": 2986,
+      "looked_up": 3388,
       "title_looked_up": 300,
-      "title_hits": 11,
-      "sources_fetched": 72,
-      "cached": 17889,
+      "title_hits": 7,
+      "sources_fetched": 92,
+      "cached": 18288,
       "errors": 0,
       "timed_out": false,
-      "budget_sec": 1435.606112534,
-      "updated_at": "2026-11-04 06:52",
-      "with_citations": 17889,
-      "with_tier": 17805,
-      "total": 18391
+      "budget_sec": 1443.491290099,
+      "updated_at": "2026-11-05 07:13",
+      "with_citations": 18288,
+      "with_tier": 18206,
+      "total": 18770
     },
     "stopped_early": false,
-    "skipped_sources": [],
+    "skipped_sources": [
+      "openalex"
+    ],
     "budget_minutes": 25.0
   },
   "total": 2000,
-  "recent30": 1726,
-  "new_today": 339,
-  "oa": 196,
+  "recent30": 1725,
+  "new_today": 379,
+  "oa": 195,
   "metrics": {
     "total": 2000,
-    "with_citations": 1557,
-    "with_tier": 1549,
-    "updated_at": "2026-11-04",
+    "with_citations": 1579,
+    "with_tier": 1574,
+    "updated_at": "2026-11-05",
     "source": "OpenAlex"
   }
 }
