@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-11-22 07:17",
-  "updated_date": "2026-11-22",
-  "generated_ts": 1795331828212,
+  "updated_at": "2026-11-23 08:02",
+  "updated_date": "2026-11-23",
+  "generated_ts": 1795420925171,
   "source_count": 3,
   "errors": [],
   "error_count": 0,
@@ -11,7 +11,7 @@
       "name": "OpenAlex",
       "enabled": true,
       "status": "ok",
-      "fetched": 621,
+      "fetched": 620,
       "errors": 0
     },
     {
@@ -40,9 +40,9 @@
     }
   ],
   "stats": {
-    "started": "2026-11-22T07:13:20",
-    "finished": "2026-11-22T07:17:04",
-    "elapsed_sec": 223.6,
+    "started": "2026-11-23T07:58:21",
+    "finished": "2026-11-23T08:02:00",
+    "elapsed_sec": 218.8,
     "topics": 18,
     "source_status": [
       {
@@ -50,7 +50,7 @@
         "name": "OpenAlex",
         "enabled": true,
         "status": "ok",
-        "fetched": 621,
+        "fetched": 620,
         "errors": 0
       },
       {
@@ -81,32 +81,32 @@
     "metrics": {
       "enabled": true,
       "network": true,
-      "looked_up": 4196,
+      "looked_up": 4026,
       "title_looked_up": 300,
       "title_hits": 14,
-      "sources_fetched": 72,
-      "cached": 23989,
+      "sources_fetched": 90,
+      "cached": 24397,
       "errors": 0,
       "timed_out": false,
-      "budget_sec": 1435.347914254,
-      "updated_at": "2026-11-22 07:17",
-      "with_citations": 23989,
-      "with_tier": 23890,
-      "total": 24422
+      "budget_sec": 1435.392235478,
+      "updated_at": "2026-11-23 08:02",
+      "with_citations": 24397,
+      "with_tier": 24287,
+      "total": 24793
     },
     "stopped_early": false,
     "skipped_sources": [],
     "budget_minutes": 25.0
   },
   "total": 2000,
-  "recent30": 1707,
-  "new_today": 293,
-  "oa": 221,
+  "recent30": 1706,
+  "new_today": 371,
+  "oa": 218,
   "metrics": {
     "total": 2000,
-    "with_citations": 1628,
-    "with_tier": 1620,
-    "updated_at": "2026-11-22",
+    "with_citations": 1666,
+    "with_tier": 1648,
+    "updated_at": "2026-11-23",
     "source": "OpenAlex"
   }
 }
