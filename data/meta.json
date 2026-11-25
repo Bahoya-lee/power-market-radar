@@ -1,10 +1,21 @@
 {
-  "updated_at": "2026-11-24 10:16",
-  "updated_date": "2026-11-24",
-  "generated_ts": 1795515364403,
+  "updated_at": "2026-11-25 09:00",
+  "updated_date": "2026-11-25",
+  "generated_ts": 1795597245795,
   "source_count": 3,
-  "errors": [],
-  "error_count": 0,
+  "errors": [
+    {
+      "topic": "ancillary",
+      "source": "crossref",
+      "error": "获取失败（重试 2 次）：https://api.crossref.org/works?query.bibliographic=frequency%20regulation%20market&filter=from-pub-date%3A2025-06-03%2Cuntil-pub-date%3A2026 —— HTTP Error 429: Too Many Requests"
+    },
+    {
+      "topic": "storage",
+      "source": "crossref",
+      "error": "获取失败（重试 2 次）：https://api.crossref.org/works?query.bibliographic=energy%20storage%20electricity%20market%20participation&filter=from-pub-date%3A2025-06-03 —— HTTP Error 429: Too Many Requests"
+    }
+  ],
+  "error_count": 2,
   "source_status": [
     {
       "id": "openalex",
@@ -26,9 +37,9 @@
       "id": "crossref",
       "name": "Crossref",
       "enabled": true,
-      "status": "ok",
-      "fetched": 900,
-      "errors": 0
+      "status": "failed",
+      "fetched": 800,
+      "errors": 2
     },
     {
       "id": "semanticscholar",
@@ -40,9 +51,9 @@
     }
   ],
   "stats": {
-    "started": "2026-11-24T10:12:54",
-    "finished": "2026-11-24T10:16:00",
-    "elapsed_sec": 185.3,
+    "started": "2026-11-25T08:57:01",
+    "finished": "2026-11-25T09:00:41",
+    "elapsed_sec": 219.9,
     "topics": 18,
     "source_status": [
       {
@@ -65,9 +76,9 @@
         "id": "crossref",
         "name": "Crossref",
         "enabled": true,
-        "status": "ok",
-        "fetched": 900,
-        "errors": 0
+        "status": "failed",
+        "fetched": 800,
+        "errors": 2
       },
       {
         "id": "semanticscholar",
@@ -81,18 +92,18 @@
     "metrics": {
       "enabled": true,
       "network": true,
-      "looked_up": 2943,
+      "looked_up": 3862,
       "title_looked_up": 300,
-      "title_hits": 30,
-      "sources_fetched": 37,
-      "cached": 24603,
+      "title_hits": 11,
+      "sources_fetched": 41,
+      "cached": 24838,
       "errors": 0,
       "timed_out": false,
-      "budget_sec": 1435.276182747,
-      "updated_at": "2026-11-24 10:15",
-      "with_citations": 24603,
-      "with_tier": 24493,
-      "total": 25147
+      "budget_sec": 1428.120594003,
+      "updated_at": "2026-11-25 09:00",
+      "with_citations": 24838,
+      "with_tier": 24726,
+      "total": 25477
     },
     "stopped_early": false,
     "skipped_sources": [],
@@ -100,13 +111,13 @@
   },
   "total": 2000,
   "recent30": 1706,
-  "new_today": 354,
-  "oa": 217,
+  "new_today": 330,
+  "oa": 215,
   "metrics": {
     "total": 2000,
-    "with_citations": 1518,
-    "with_tier": 1497,
-    "updated_at": "2026-11-24",
+    "with_citations": 1424,
+    "with_tier": 1403,
+    "updated_at": "2026-11-25",
     "source": "OpenAlex"
   }
 }
