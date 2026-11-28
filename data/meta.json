@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-11-27 08:58",
-  "updated_date": "2026-11-27",
-  "generated_ts": 1795769926483,
+  "updated_at": "2026-11-28 08:19",
+  "updated_date": "2026-11-28",
+  "generated_ts": 1795853972682,
   "source_count": 3,
   "errors": [],
   "error_count": 0,
@@ -11,7 +11,7 @@
       "name": "OpenAlex",
       "enabled": true,
       "status": "ok",
-      "fetched": 621,
+      "fetched": 620,
       "errors": 0
     },
     {
@@ -40,9 +40,9 @@
     }
   ],
   "stats": {
-    "started": "2026-11-27T08:54:35",
-    "finished": "2026-11-27T08:58:43",
-    "elapsed_sec": 247.7,
+    "started": "2026-11-28T08:15:23",
+    "finished": "2026-11-28T08:19:28",
+    "elapsed_sec": 245.2,
     "topics": 18,
     "source_status": [
       {
@@ -50,7 +50,7 @@
         "name": "OpenAlex",
         "enabled": true,
         "status": "ok",
-        "fetched": 621,
+        "fetched": 620,
         "errors": 0
       },
       {
@@ -81,32 +81,32 @@
     "metrics": {
       "enabled": true,
       "network": true,
-      "looked_up": 4883,
+      "looked_up": 4906,
       "title_looked_up": 300,
-      "title_hits": 29,
-      "sources_fetched": 59,
-      "cached": 25578,
+      "title_hits": 21,
+      "sources_fetched": 72,
+      "cached": 25930,
       "errors": 0,
       "timed_out": false,
-      "budget_sec": 1432.196961521,
-      "updated_at": "2026-11-27 08:58",
-      "with_citations": 25578,
-      "with_tier": 25463,
-      "total": 26214
+      "budget_sec": 1435.538382257,
+      "updated_at": "2026-11-28 08:19",
+      "with_citations": 25930,
+      "with_tier": 25809,
+      "total": 26565
     },
     "stopped_early": false,
     "skipped_sources": [],
     "budget_minutes": 25.0
   },
   "total": 2000,
-  "recent30": 1704,
-  "new_today": 384,
-  "oa": 222,
+  "recent30": 1703,
+  "new_today": 351,
+  "oa": 224,
   "metrics": {
     "total": 2000,
-    "with_citations": 1429,
-    "with_tier": 1421,
-    "updated_at": "2026-11-27",
+    "with_citations": 1431,
+    "with_tier": 1420,
+    "updated_at": "2026-11-28",
     "source": "OpenAlex"
   }
 }
